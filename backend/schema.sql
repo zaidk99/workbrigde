@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 -- client profile table 
 CREATE TABLE IF NOT EXISTS client_profiles(
-    client_user_id  UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    client_user_id  UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE ,
     company_name VARCHAR(255),
     phone VARCHAR(20) NOT NULL,
     company_address TEXT,
@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS project_employees(
 -- Message Table 
 CREATE TABLE IF NOT EXISTS messages(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE NO ACTION,
+    receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE NO ACTION,
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

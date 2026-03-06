@@ -7,11 +7,11 @@ const router = express.Router();
 
 router.post('/registeruser',authenticate,authorizeRoles('admin'),registerUserController);
 
-router.get('/',authenticate,authorizeRoles('admin'),authenticate,authorizeRoles('admin'),getUserByrolecontroller);
+router.get('/',authenticate,authorizeRoles('admin'),getUserByrolecontroller);
 
 router.patch('/:id',authenticate,authorizeRoles('admin'),deactivateUserByidController)
 
-router.delete('/:id',authenticate,authorizeRoles('admin'),authenticate,authorizeRoles('admin'),deleteUserByIdController);
+router.delete('/:id',authenticate,authorizeRoles('admin'),deleteUserByIdController);
 
 
 

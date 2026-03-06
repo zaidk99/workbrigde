@@ -14,11 +14,11 @@ const pool = new Pool ({
 const connectDB = async ()=>{
     try {
         await pool.query("SELECT NOW()");
-        console.log("Database Connected Successfully");
+        console.log("database connected successfully");
     } catch (error) {
-        console.error("Database Connected Failed :" , error);
+        console.error("database connection failed: " , error);
         process.exit(1);
     }
 }
 
-export {Pool , connectDB};
+export {pool , connectDB};

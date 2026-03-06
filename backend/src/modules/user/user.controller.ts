@@ -19,6 +19,11 @@ export const registerUserController = async (req: Request, res: Response) => {
     company_address,
   } = req.body;
 
+  if (!name || !email || !password || !role) {
+    res.status(400).json({ message: "name, email, password and role are required" });
+    return;
+  }
+  
   try {
     const result = await registerUser({
       name,
@@ -31,15 +36,15 @@ export const registerUserController = async (req: Request, res: Response) => {
       company_address,
     });
     res.status(201).json({
-      message: "User registered successfully",
+      message: "user registered successfully",
       user: result.user,
     });
   } catch (error: any) {
-    if (error.message === "User Exists") {
+    if (error.message === "user exists") {
       res.status(409).json({ message: error.message });
       return;
     }
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "internal server error" });
   }
 };
 
@@ -72,7 +77,7 @@ export const deactivateUserByidController = async (
       return res.status(400).json({ message: "user id is required" });
     }
     await deactivateUserByid(id);
-    return res.status(200).json({ message: "user deactivate successfully" });
+    return res.status(200).json({ message: "user deactivated successfully" });
   } catch (error: any) {
     if (error.message === "user not found") {
       return res.status(404).json({ message: error.message });
@@ -85,7 +90,7 @@ export const deleteUserByIdController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
     if (!id) {
-      return res.status(400).json({ message: "user Id is required" });
+      return res.status(400).json({ message: "user id is required" });
     }
     await deleteUserById(id);
     return res.status(200).json({ message: "user deleted successfully" });
