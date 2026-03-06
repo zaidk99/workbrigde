@@ -32,3 +32,10 @@ export const createServiceRequestController = async (
      res.status(500).json({ message: "internal server error" });
   }
 };
+
+
+export const getallSRforSpecificClientServiceRequestController = async(req:Request,res:Response){
+  if(!req.user){
+    
+  }
+}

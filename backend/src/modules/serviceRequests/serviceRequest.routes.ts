@@ -6,12 +6,12 @@ import { createServiceRequestController } from "./serviceRequest.controller";
 const router = express.Router();
 
 
-router.post("/service-requests",authenticate,authorizeRoles('client'),createServiceRequestController);
+router.post("/create-service-request",authenticate,authorizeRoles('client'),createServiceRequestController);
 // admin gets all req from all clients
-router.get("/service-requests/all",authenticate,authorizeRoles('admin'));
+router.get("/all",authenticate,authorizeRoles('admin'));
 // get all req by logged in client
-router.get("/service-requests/:id",authenticate,authorizeRoles('client'));
-router.get("/service-requests",authenticate,authorizeRoles('client'));
+router.get("/my",authenticate,authorizeRoles('client'));
+router.get("/:id",authenticate,authorizeRoles('client'));
 
-
+export default router;
 

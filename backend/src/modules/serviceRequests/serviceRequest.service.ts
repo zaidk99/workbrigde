@@ -21,3 +21,13 @@ export const createServiceRequestsbyClientService = async (
   );
   return result.rows[0];
 };
+
+export const getallSRforSpecificClientServiceRequestService = async (
+  client_user_id:string,
+): Promise<outForafterCreatingSr[]> => {
+  const result = await pool.query(
+    `SELECT * FROM service_requests WHERE client_user_id = $1 `,
+    [client_user_id]
+  );
+  return result.rows;
+};
