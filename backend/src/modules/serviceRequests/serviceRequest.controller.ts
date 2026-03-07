@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createServiceRequestsbyClientService, getallSRforSpecificClientServiceRequestService } from "./serviceRequest.service";
+import { createServiceRequestsbyClientService, getallServiceRequestsService, getallSRforSpecificClientServiceRequestService } from "./serviceRequest.service";
 
 export const createServiceRequestController = async (
   req: Request,
@@ -48,10 +48,31 @@ export const getallSRforSpecificClientServiceRequestController = async(req:Reque
   try {
     const result = await getallSRforSpecificClientServiceRequestService(client_user_id);
     res.status(200).json({
-      message:'Got all the service requests by the client',
+      message:"got all the service requests by the client",
       sr:result,
     })
   } catch (error) {
     res.status(500).json({message:"internal server error"});
   }
 };
+
+export const getallServiceRequestsController = async(req:Request ,res:Response)=>{
+  if(!req.user){
+    res.status(401).json({message:"Unauthorized"});
+    return;
+  }
+  const adminThere = req.user.id;
+  if(!adminThere){
+    res.status(400).json({message:"Admin is missing"});
+    return;
+  }
+  try {
+    const result = await getallServiceRequestsService();
+    res.status(200).json({
+      message:"got all the service requests made by all clients",
+      sr:result,
+    })
+  } catch (error) {
+    res.status(500).json({message:"internal server error"});
+  }
+}

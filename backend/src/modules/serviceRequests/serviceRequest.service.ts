@@ -31,3 +31,8 @@ export const getallSRforSpecificClientServiceRequestService = async (
   );
   return result.rows;
 };
+
+export const getallServiceRequestsService = async ():Promise<outForafterCreatingSr[]> => {
+   const result = await pool.query(`SELECT * FROM service_requests`);
+   return result.rows;
+}
