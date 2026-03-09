@@ -36,3 +36,9 @@ export const getallServiceRequestsService = async ():Promise<outForafterCreating
    const result = await pool.query(`SELECT * FROM service_requests`);
    return result.rows;
 }
+
+export const getServiceRequestsByidinitiaterclientandadminservice = async (id:string):Promise<outForafterCreatingSr>=>{
+  const result = await pool.query(`SELECT * FROM service_requests WHERE id = $1`,[id]);
+  return result.rows[0];
+};
+

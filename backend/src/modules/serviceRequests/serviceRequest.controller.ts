@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createServiceRequestsbyClientService, getallServiceRequestsService, getallSRforSpecificClientServiceRequestService } from "./serviceRequest.service";
+import { createServiceRequestsbyClientService, getallServiceRequestsService, getallSRforSpecificClientServiceRequestService, getServiceRequestsByidinitiaterclientandadminservice } from "./serviceRequest.service";
 
 export const createServiceRequestController = async (
   req: Request,
@@ -75,4 +75,31 @@ export const getallServiceRequestsController = async(req:Request ,res:Response)=
   } catch (error) {
     res.status(500).json({message:"internal server error"});
   }
-}
+};
+
+export const getServiceRequestsByidinitiaterclientandadminController = async(req:Request , res:Response)=>{
+  if(!req.user){
+    res.status(401).json({message:"unauthorized"});
+    return;
+  }
+  const isClientAdminThere = req.user.id;
+  if(!isClientAdminThere){
+    res.status(400).json({message:"Admin - Client missing"});
+    return;
+  }
+  const getServiceRequestId = req.params.id as string;
+  try {
+    const result = await getServiceRequestsByidinitiaterclientandadminservice(getServiceRequestId);
+    if(!result){
+      res.status(404).json({message:"service request not found"});
+      return;
+    }
+    res.status(200).json({
+      message:"got the speicifc id service request ",
+      sr:result,
+    })
+  } catch (error) {
+    res.status(500).json({message:"internal server error"});
+  }
+};
+
