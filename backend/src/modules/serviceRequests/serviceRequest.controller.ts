@@ -40,11 +40,6 @@ export const getallSRforSpecificClientServiceRequestController = async(req:Reque
     return;
   }
   const client_user_id = req.user.id;
-
-  if(!client_user_id){
-    res.status(400).json({message:"client id is missing"});
-    return;
-  }
   try {
     const result = await getallSRforSpecificClientServiceRequestService(client_user_id);
     res.status(200).json({
@@ -61,11 +56,6 @@ export const getallServiceRequestsController = async(req:Request ,res:Response)=
     res.status(401).json({message:"Unauthorized"});
     return;
   }
-  const adminThere = req.user.id;
-  if(!adminThere){
-    res.status(400).json({message:"Admin is missing"});
-    return;
-  }
   try {
     const result = await getallServiceRequestsService();
     res.status(200).json({
@@ -80,11 +70,6 @@ export const getallServiceRequestsController = async(req:Request ,res:Response)=
 export const getServiceRequestsByidinitiaterclientandadminController = async(req:Request , res:Response)=>{
   if(!req.user){
     res.status(401).json({message:"unauthorized"});
-    return;
-  }
-  const isClientAdminThere = req.user.id;
-  if(!isClientAdminThere){
-    res.status(400).json({message:"Admin - Client missing"});
     return;
   }
   const getServiceRequestId = req.params.id as string;
