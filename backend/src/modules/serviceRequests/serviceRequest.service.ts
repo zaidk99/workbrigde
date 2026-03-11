@@ -42,3 +42,7 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (id:st
   return result.rows[0] || null;
 };
 
+export const ApproverejectSeriviceRequestAdminonly = async (id:string):Promise<outForafterCreatingSr>=>{
+  
+}
+
