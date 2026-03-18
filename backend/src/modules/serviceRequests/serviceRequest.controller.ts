@@ -88,3 +88,7 @@ export const getServiceRequestsByidinitiaterclientandadminController = async(req
   }
 };
 
+export const approverejectSeriviceRequestAdminonlyController = async(req:Request , res:Response)=>{
+  if()
+}
+

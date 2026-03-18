@@ -23,28 +23,39 @@ export const createServiceRequestsbyClientService = async (
 };
 
 export const getallSRforSpecificClientServiceRequestService = async (
-  client_user_id:string,
+  client_user_id: string,
 ): Promise<outForafterCreatingSr[]> => {
   const result = await pool.query(
     `SELECT * FROM service_requests WHERE client_user_id = $1 `,
-    [client_user_id]
+    [client_user_id],
   );
   return result.rows;
 };
 
-export const getallServiceRequestsService = async ():Promise<outForafterCreatingSr[]> => {
-   const result = await pool.query(`SELECT * FROM service_requests`);
-   return result.rows;
-}
+export const getallServiceRequestsService = async (): Promise<
+  outForafterCreatingSr[]
+> => {
+  const result = await pool.query(`SELECT * FROM service_requests`);
+  return result.rows;
+};
 
-export const getServiceRequestsByidinitiaterclientandadminservice = async (id:string):Promise<outForafterCreatingSr | null>=>{
-  const result = await pool.query(`SELECT * FROM service_requests WHERE id = $1`,[id]);
+export const getServiceRequestsByidinitiaterclientandadminservice = async (
+  id: string,
+): Promise<outForafterCreatingSr | null> => {
+  const result = await pool.query(
+    `SELECT * FROM service_requests WHERE id = $1`,
+    [id],
+  );
   return result.rows[0] || null;
 };
 
-export const ApproverejectSeriviceRequestAdminonly = async (id:string):Promise<outForafterCreatingSr>=>{
-
-
-  
-}
-
+export const approverejectSeriviceRequestAdminonly = async (
+  id: string,
+  status: string,
+): Promise<outForafterCreatingSr> => {
+  const result = await pool.query(
+    `UPDATE serive_requests SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+    [id, status],
+  );
+  return result.rows[0];
+};

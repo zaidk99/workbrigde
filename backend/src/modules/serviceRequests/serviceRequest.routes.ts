@@ -13,5 +13,7 @@ router.get("/all",authenticate,authorizeRoles('admin'),getallServiceRequestsCont
 router.get("/my",authenticate,authorizeRoles('client'),getallSRforSpecificClientServiceRequestController);
 router.get("/:id",authenticate,authorizeRoles('client','admin'),getServiceRequestsByidinitiaterclientandadminController);
 
+router.patch("/:id/status",authenticate,authorizeRoles('admin'),)
+
 export default router;
 
