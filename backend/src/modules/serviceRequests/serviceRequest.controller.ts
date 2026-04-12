@@ -113,24 +113,12 @@ export const approverejectSeriviceRequestAdminonlyController = async (
     res.status(401).json({message: "unauthorized"});
     return;
   }
-  const id = req.params;
-  const status = req.body;
+  const {id} = req.params;
+  const {status} = req.body;
 
   const validStatus = ['pending','accepted','rejected'];
   if(!validStatus.includes(status)){
     res.status(400).json({message:"Invalid status value"});
     return;
   }
-
-  try {
-    const result = await approverejectSeriviceRequestAdminonly(id,status);
-     if(!)
-    }
-    
-  } catch (error) {
-    res.status(500).json({message:"internal server error"});
-    
-  }
-
-
 };
