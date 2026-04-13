@@ -116,7 +116,7 @@ export const approverejectSeriviceRequestAdminonlyController = async (
   const {id} = req.params;
   const {status} = req.body;
 
-  const validStatus = ['pending','accepted','rejected'];
+  const validStatus = ['accepted','rejected'];
   if(!validStatus.includes(status)){
     res.status(400).json({message:"Invalid status value"});
     return;

@@ -49,6 +49,9 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
   return result.rows[0] || null;
 };
 
+// ACID PROPERTIES OF TRANSACTION 
+// TRANSACTION AND RACE CONDITION has to be implemented
+
 export const approverejectSeriviceRequestAdminonly = async (
   id: string,
   status: string,
