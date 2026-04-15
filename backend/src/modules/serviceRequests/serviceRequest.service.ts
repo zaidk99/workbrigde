@@ -57,14 +57,13 @@ export const approverejectSeriviceRequestAdminonly = async (
   id: string,
   status: string,
 ): Promise<outForafterCreatingSr> => {
-  const result = await pool.query(
-    `UPDATE serive_requests SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
-    [id, status],
-  );
-  const updatedSrStatus = result.rows[0].status;
-  if(updatedSrStatus == 'accept'){
+  const client = await pool.connect();
+
+  try {
+    //  ACID-compliant transactions
+    await client.query('BEGIN');
+  } catch (error) {
     
   }
-  return result.rows[0];
 };
 
