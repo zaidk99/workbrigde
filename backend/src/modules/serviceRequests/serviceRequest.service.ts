@@ -62,6 +62,8 @@ export const approverejectSeriviceRequestAdminonly = async (
   try {
     //  ACID-compliant transactions
     await client.query('BEGIN');
+
+    const result = client.query('UPDATE service_requests')
   } catch (error) {
     
   }
