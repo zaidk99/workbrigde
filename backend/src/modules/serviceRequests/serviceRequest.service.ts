@@ -51,7 +51,7 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 
 // ACID PROPERTIES OF TRANSACTION 
 // TRANSACTION AND RACE CONDITION has to be implemented
-// 
+
 
 export const approverejectSeriviceRequestAdminonly = async (
   id: string,
@@ -61,5 +61,10 @@ export const approverejectSeriviceRequestAdminonly = async (
     `UPDATE serive_requests SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
     [id, status],
   );
+  const updatedSrStatus = result.rows[0].status;
+  if(updatedSrStatus == 'accept'){
+    
+  }
   return result.rows[0];
 };
+
