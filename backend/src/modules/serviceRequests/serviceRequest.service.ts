@@ -70,11 +70,13 @@ export const approverejectSeriviceRequestAdminonly = async (
 
     const updatedSr = result.rows[0];
 
-    if(!updatedSr){
+    if (!updatedSr) {
       await client.query("ROLLBACK");
     }
 
-    if(updatedSr.status !== 'pending')
-
+    if (updatedSr.status !== "pending") {
+      await client.query("ROLLBACK");
+      throw new Error("Service request already processed");
+    }
   } catch (error) {}
 };
