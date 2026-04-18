@@ -49,9 +49,8 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
   return result.rows[0] || null;
 };
 
-// ACID PROPERTIES OF TRANSACTION 
+// ACID PROPERTIES OF TRANSACTION
 // TRANSACTION AND RACE CONDITION has to be implemented
-
 
 export const approverejectSeriviceRequestAdminonly = async (
   id: string,
@@ -61,17 +60,21 @@ export const approverejectSeriviceRequestAdminonly = async (
 
   try {
     //  ACID-compliant transactions
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
-      const result = await client.query(
+    const result = await client.query(
       `UPDATE service_requests SET status = $1, updated_at = NOW()
        WHERE id = $2 RETURNING *`,
       [status, id],
     );
 
+    const updatedSr = result.rows[0];
 
-  } catch (error) {
-    
-  }
+    if(!updatedSr){
+      await client.query("ROLLBACK");
+    }
+
+    if(updatedSr.status !== 'pending')
+
+  } catch (error) {}
 };
-
