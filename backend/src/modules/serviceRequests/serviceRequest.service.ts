@@ -70,9 +70,9 @@ export const approverejectSeriviceRequestAdminonly = async (
 
     const updatedSr = result.rows[0];
 
-    if (!updatedSr) {
-      await client.query("ROLLBACK");
-    }
+    // if (!updatedSr) {
+    //   await client.query("ROLLBACK");
+    // }
 
     // if (updatedSr.status !== "pending") {
     //   await client.query("ROLLBACK");
