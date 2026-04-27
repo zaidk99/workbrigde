@@ -52,33 +52,41 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 // ACID PROPERTIES OF TRANSACTION
 // TRANSACTION AND RACE CONDITION has to be implemented
 
-export const approverejectSeriviceRequestAdminonly = async (
-  id: string,
-  status: string,
-): Promise<outForafterCreatingSr> => {
+export const approverejectSeriviceRequestAdminonly = async(id:string):Promise<outForafterCreatingSr | null> =>{
+
+  // client from the pool for transaction
+
   const client = await pool.connect();
 
   try {
-    //  ACID-compliant transactions
-    await client.query("BEGIN");
 
-    const result = await client.query(
-      `UPDATE service_requests SET status = $1, updated_at = NOW()
-       WHERE id = $2 RETURNING *`,
-      [status, id],
+    // lock the SR row so no other request can touch it at the same time
+    // this prevents race conditions
+
+    const keepSRforUpdate = await client.query(
+      `SELECT * FROM service_requests WHERE id = $1  FOR UPDATE`, [id]
     );
 
-    const updatedSr = result.rows[0];
+    const currentSR = keepSRforUpdate.rows[0];
 
-    // if (!updatedSr) {
-    //   await client.query("ROLLBACK");
-    // }
+    // if sr not found
+    if(!currentSR){
+      await client.query('ROLLBACK');
+      return null;
+    }
 
-    // if (updatedSr.status !== "pending") {
-    //   await client.query("ROLLBACK");
-    //   throw new Error("Service request already processed");
-    // };
+    
+    
+  } catch (error) {
+    
+  }
 
 
-  } catch (error) {}
-};
+
+
+
+
+
+
+
+}
