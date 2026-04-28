@@ -52,7 +52,7 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 // ACID PROPERTIES OF TRANSACTION
 // TRANSACTION AND RACE CONDITION has to be implemented
 
-export const approverejectSeriviceRequestAdminonly = async(id:string):Promise<outForafterCreatingSr | null> =>{
+export const approverejectSeriviceRequestAdminonly = async(id:string,status:string):Promise<outForafterCreatingSr | null> =>{
 
   // client from the pool for transaction
 
@@ -75,7 +75,18 @@ export const approverejectSeriviceRequestAdminonly = async(id:string):Promise<ou
       return null;
     }
 
-    
+    // stop processing if sr already accepted / rejected
+
+    if(currentSR !== "pending"){
+      await client.query('ROLLBACK');
+      throw new Error('Server request has already been processed');
+    }
+
+    // update sr status 
+    const result = await client.query(`UPDATE service_requests SET service_request_status = $1 , updated_at = now() WHERE id = $2
+      RETURNING *`, [status,id]);
+
+
     
   } catch (error) {
     
