@@ -86,6 +86,16 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
     const result = await client.query(`UPDATE service_requests SET service_request_status = $1 , updated_at = now() WHERE id = $2
       RETURNING *`, [status,id]);
 
+    const updatedSR = result.rows[0];
+
+    // if acc - auto create project 
+    if(status = 'accepted'){
+      await client.query(``)
+    }
+
+
+
+
 
     
   } catch (error) {
