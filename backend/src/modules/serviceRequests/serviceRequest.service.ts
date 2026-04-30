@@ -88,26 +88,22 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
 
     const updatedSR = result.rows[0];
 
-    // if acc - auto create project 
+    // if accepted - auto create project 
     if(status = 'accepted'){
-      await client.query(``)
+      await client.query(`INSERT INTO projects(name,description,client_user_id,service_request_id) VALUES ($1,$2,$3,$4)`,[updatedSR.title,updatedSR.description,updatedSR.client_user_id,updatedSR.id,]);
     }
-
-
-
-
-
     
+    // when everything succeeds commit
+    await client.query('COMMIT');
+
+    return updatedSR;
+
   } catch (error) {
-    
-  }
-
-
-
-
-
-
-
-
+    // everything fails rollback
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  };
 
 }
