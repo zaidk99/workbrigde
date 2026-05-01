@@ -54,7 +54,7 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 
 export const approverejectSeriviceRequestAdminonly = async(id:string,status:string):Promise<outForafterCreatingSr | null> =>{
 
-  // client from the pool for transaction
+  // get a client from the pool for transaction
 
   const client = await pool.connect();
 
@@ -82,7 +82,7 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
       throw new Error('Server request has already been processed');
     }
 
-    // update sr status 
+    // update sr status  
     const result = await client.query(`UPDATE service_requests SET service_request_status = $1 , updated_at = now() WHERE id = $2
       RETURNING *`, [status,id]);
 
@@ -92,7 +92,7 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
     if(status = 'accepted'){
       await client.query(`INSERT INTO projects(name,description,client_user_id,service_request_id) VALUES ($1,$2,$3,$4)`,[updatedSR.title,updatedSR.description,updatedSR.client_user_id,updatedSR.id,]);
     }
-    
+
     // when everything succeeds commit
     await client.query('COMMIT');
 
@@ -107,3 +107,5 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
   };
 
 }
+
+
