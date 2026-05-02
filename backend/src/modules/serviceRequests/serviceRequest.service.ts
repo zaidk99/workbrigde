@@ -93,6 +93,8 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
       await client.query(`INSERT INTO projects(name,description,client_user_id,service_request_id) VALUES ($1,$2,$3,$4)`,[updatedSR.title,updatedSR.description,updatedSR.client_user_id,updatedSR.id,]);
     }
 
+    
+
     // when everything succeeds commit
     await client.query('COMMIT');
 
