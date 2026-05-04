@@ -57,12 +57,14 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
   // get a client from the pool for transaction
 
   const client = await pool.connect();
+  console.log('1,client connected');
 
   try {
 
     // START TRANSACTION
 
     await client.query('BEGIN');
+    console.log('begin');
     
 
 
@@ -99,8 +101,6 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
     if(status = 'accepted'){
       await client.query(`INSERT INTO projects(name,description,client_user_id,service_request_id) VALUES ($1,$2,$3,$4)`,[updatedSR.title,updatedSR.description,updatedSR.client_user_id,updatedSR.id,]);
     }
-
-
 
     // when everything succeeds commit
     await client.query('COMMIT');

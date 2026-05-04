@@ -1,7 +1,7 @@
 import express from "express";
 import { authorizeRoles } from "../../middleware/authorizeRoles";
 import { authenticate } from "../../middleware/authenticate";
-import { createServiceRequestController, getallServiceRequestsController, getallSRforSpecificClientServiceRequestController, getServiceRequestsByidinitiaterclientandadminController } from "./serviceRequest.controller";
+import { approverejectSeriviceRequestAdminonlyController, createServiceRequestController, getallServiceRequestsController, getallSRforSpecificClientServiceRequestController, getServiceRequestsByidinitiaterclientandadminController } from "./serviceRequest.controller";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get("/all",authenticate,authorizeRoles('admin'),getallServiceRequestsCont
 router.get("/my",authenticate,authorizeRoles('client'),getallSRforSpecificClientServiceRequestController);
 router.get("/:id",authenticate,authorizeRoles('client','admin'),getServiceRequestsByidinitiaterclientandadminController);
 
-router.patch("/:id/status",authenticate,authorizeRoles('admin'),)
+router.patch("/:id/status",authenticate,authorizeRoles('admin'),approverejectSeriviceRequestAdminonlyController);
 
 export default router;
 
