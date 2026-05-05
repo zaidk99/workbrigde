@@ -53,7 +53,7 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 // TRANSACTION AND RACE CONDITION has to be implemented
 
 export const approverejectSeriviceRequestAdminonly = async(id:string,status:string):Promise<outForafterCreatingSr | null> =>{
-
+   console.log("service clicked")
   // get a client from the pool for transaction
 
   const client = await pool.connect();
@@ -75,6 +75,7 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
     const keepSRforUpdate = await client.query(
       `SELECT * FROM service_requests WHERE id = $1  FOR UPDATE`, [id]
     );
+    console.log("kept for update")
 
     const currentSR = keepSRforUpdate.rows[0];
 

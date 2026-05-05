@@ -109,17 +109,20 @@ export const approverejectSeriviceRequestAdminonlyController = async (
   req: Request,
   res: Response
 ) => {
+  
   if(!req.user){
     res.status(401).json({message: "unauthorized"});
     return;
   }
-  const {id} = req.params;
-  const {status} = req.body;
-
-  const validStatus = ['accepted','rejected'];
-  if(!validStatus.includes(status)){
-    res.status(400).json({message:"Invalid status value"});
-    return;
+  
+  try {
+    
+  } catch (error) {
+    
   }
+
+
+
+  console.log("controller finished");
 };
 
