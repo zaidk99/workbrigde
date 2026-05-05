@@ -49,25 +49,31 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
   return result.rows[0] || null;
 };
 
+
+
+
+
+
+
+
+
+
+
+
 // ACID PROPERTIES OF TRANSACTION
 // TRANSACTION AND RACE CONDITION has to be implemented
 
 export const approverejectSeriviceRequestAdminonly = async(id:string,status:string):Promise<outForafterCreatingSr | null> =>{
-   console.log("service clicked")
   // get a client from the pool for transaction
 
   const client = await pool.connect();
-  console.log('1,client connected');
 
   try {
 
     // START TRANSACTION
 
     await client.query('BEGIN');
-    console.log('begin');
-    
-
-
+  
 
     // lock the SR row so no other request can touch it at the same time
     // this prevents race conditions
@@ -75,7 +81,6 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
     const keepSRforUpdate = await client.query(
       `SELECT * FROM service_requests WHERE id = $1  FOR UPDATE`, [id]
     );
-    console.log("kept for update")
 
     const currentSR = keepSRforUpdate.rows[0];
 
@@ -87,19 +92,19 @@ export const approverejectSeriviceRequestAdminonly = async(id:string,status:stri
 
     // stop processing if sr already accepted / rejected
 
-    if(currentSR !== "pending"){
+    if(currentSR.status !== "pending"){
       await client.query('ROLLBACK');
       throw new Error('Server request has already been processed');
     }
 
     // update sr status  
-    const result = await client.query(`UPDATE service_requests SET service_request_status = $1 , updated_at = now() WHERE id = $2
+    const result = await client.query(`UPDATE service_requests SET status = $1 , updated_at = now() WHERE id = $2
       RETURNING *`, [status,id]);
 
     const updatedSR = result.rows[0];
 
     // if accepted - auto create project 
-    if(status = 'accepted'){
+    if(updatedSR.status === 'accepted'){
       await client.query(`INSERT INTO projects(name,description,client_user_id,service_request_id) VALUES ($1,$2,$3,$4)`,[updatedSR.title,updatedSR.description,updatedSR.client_user_id,updatedSR.id,]);
     }
 
