@@ -107,22 +107,38 @@ export const getServiceRequestsByidinitiaterclientandadminController = async (
 
 export const approverejectSeriviceRequestAdminonlyController = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
-  
-  if(!req.user){
-    res.status(401).json({message: "unauthorized"});
+  if (!req.user) {
+    res.status(401).json({ message: "unauthorized" });
     return;
   }
-  
+
   try {
+    const  id  = req.params.id as string;
+    const  status  = req.body.status as string;
+
+    const validStatus = ["accepted", "rejected"];
+
+    if (!validStatus.includes(status)) {
+      res.status(400).json({ message: "Invalid status value" });
+      return;
+    }
+
+    const result = await approverejectSeriviceRequestAdminonly(id , status);
+    if(!result){
+      res.status(404).json({message:"service request status problem and project not created"});
+      return;
+    }
+    res.status(200).json({
+      message:"service request status updated and project created",
+      service_request_status_updated_project_created : result,
+    });
+
     
   } catch (error) {
-    
+
+    res.status(500).json({ message: "internal server error" });
+
   }
-
-
-
-  console.log("controller finished");
 };
-
