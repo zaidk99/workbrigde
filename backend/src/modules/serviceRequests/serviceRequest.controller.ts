@@ -135,9 +135,11 @@ export const approverejectSeriviceRequestAdminonlyController = async (
       service_request_status_updated_project_created : result,
     });
     
-  } catch (error) {
-
-    res.status(500).json({ message: "internal server error" });
-
+  } catch (error:any) {
+    if(error.message === 'Server request has already been processed'){
+      res.status(400).json({message:error.message});
+      return;
+    }
+    res.status(500).json({ message: "internal server error is this" });
   }
 };

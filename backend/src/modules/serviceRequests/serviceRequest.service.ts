@@ -52,14 +52,6 @@ export const getServiceRequestsByidinitiaterclientandadminservice = async (
 
 
 
-
-
-
-
-
-
-
-
 // ACID PROPERTIES OF TRANSACTION
 // TRANSACTION AND RACE CONDITION has to be implemented
 
