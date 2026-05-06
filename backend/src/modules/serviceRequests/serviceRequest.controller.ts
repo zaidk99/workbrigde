@@ -131,7 +131,9 @@ export const approverejectSeriviceRequestAdminonlyController = async (
       return;
     }
     res.status(200).json({
-      message:"service request status updated and project created",
+      message:status === 'accepted'
+      ? "service request status updated and project created"
+      : "service request status updated",
       service_request_status_updated_project_created : result,
     });
     
