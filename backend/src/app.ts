@@ -13,6 +13,7 @@ app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter);
 
 app.use('/api/serviceRequests',serviceRequestsrouter);
+app.use('/api/projects',projectsRouter);
 
 
 app.get("/health",(_req,res)=>{
