@@ -1,8 +1,13 @@
 import express from "express";
+import { authenticate } from "../../middleware/authenticate";
+import { authorizeRoles } from "../../middleware/authorizeRoles";
 
 
 
 const router = express.Router();
 
 
-router.post("/all-projects",);
+router.get("/all-projects",authenticate,authorizeRoles('admin'),);
+
+
+export default router;
