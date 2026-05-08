@@ -3,6 +3,7 @@ import cors from  "cors";
 import authRouter from "./modules/auth/auth.routes";
 import userRouter from "./modules/user/user.routes";
 import serviceRequestsrouter from "./modules/serviceRequests/serviceRequest.routes";
+import projectsRouter from "./modules/projects/project.routes"
 
 const app = express();
 
