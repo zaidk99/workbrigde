@@ -13,11 +13,11 @@ interface outputForprojectService {
   status: string;
   created_at: Date;
   updated_at: Date;
+  client_name: string;
+  client_email: string;1
 }
 
-export const getallProjectsinitiatoradminOnly = async (
-  id:string,
-) : Promise <outputForprojectService[]> => {
+export const getallProjectsinitiatoradminOnly = async () : Promise <outputForprojectService[]> => {
 
     const result = await pool.query(`SELECT 
         

@@ -1,0 +1,31 @@
+import { Request, Response } from "express";
+import { getallProjectsinitiatoradminOnly } from "./project.service";
+
+export const getallProjectsinitiatoradminOnlyController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const getallproj = await getallProjectsinitiatoradminOnly();
+
+    res.status(200).json({
+      success: true,
+      message: "got all projects successfully",
+      count: getallproj.length,
+      allprojects: getallproj,
+    });
+  } catch (error: any) {
+    console.error("error fetching projects", error);
+
+    res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error: error instanceof Error ? error.message : "unknown error",
+    });
+  }
+};
