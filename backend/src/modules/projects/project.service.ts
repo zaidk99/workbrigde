@@ -20,7 +20,6 @@ interface outputForprojectService {
 export const getallProjectsinitiatoradminOnly = async () : Promise <outputForprojectService[]> => {
 
     const result = await pool.query(`SELECT 
-        
         p.id,
         p.name,
         p.description,
@@ -32,9 +31,8 @@ export const getallProjectsinitiatoradminOnly = async () : Promise <outputForpro
         u.name AS client_name,
         u.email AS client_email
 
-        FROM projects p JOIN users ON u.id = p.client_user_id
+        FROM projects p JOIN users u ON u.id = p.client_user_id
         ORDER BY p.created_at DESC
-        
         `);
 
         return result.rows;
