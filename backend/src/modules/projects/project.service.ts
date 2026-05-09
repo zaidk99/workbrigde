@@ -40,7 +40,8 @@ export const getallProjectsinitiatoradminOnly = async (): Promise<
 export const getallProjectsSpecifictoClientService = async (
   client_user_id: string,
 ): Promise<outputForprojectService[]> => {
-    const result = await pool.query(`SELECT 
+  const result = await pool.query(
+    `SELECT 
 
       id,
       name,
@@ -49,11 +50,11 @@ export const getallProjectsSpecifictoClientService = async (
       service_request_id,
       status,
       created_at,
-      updated_at,
-      name AS client_name,
-      email AS client_email
+      updated_at
 
-      FROM projects WHERE client_user_id = $1`,[client_user_id])
+      FROM projects WHERE client_user_id = $1`,
+    [client_user_id],
+  );
 
   return result.rows;
 };

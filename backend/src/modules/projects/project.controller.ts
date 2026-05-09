@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { getallProjectsinitiatoradminOnly } from "./project.service";
+import {
+  getallProjectsinitiatoradminOnly,
+  getallProjectsSpecifictoClientService,
+} from "./project.service";
 
 export const getallProjectsinitiatoradminOnlyController = async (
   req: Request,
@@ -30,23 +33,36 @@ export const getallProjectsinitiatoradminOnlyController = async (
   }
 };
 
+export const getallProjectsSpecifictoClientController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+    return;
+  }
 
+  // getting client user id
+  const client_user_id = req.user.id;
 
-export const getallProjectsSpecifictoClientController = async(req:Request,res:Response)=>{
-    if(!req.user){
-        res.status(401).json({
-            success:false,
-            message:"Unauthorized",
-        })
-        return;
-    }
+  try {
+    const gettingClientsprojects =
+      await getallProjectsSpecifictoClientService(client_user_id);
+    res.status(200).json({
+      success: true,
+      message: "got clients projects",
+      clientsProjects: gettingClientsprojects,
+    });
+  } catch (error: any) {
+    console.error("error fetching clients projects", error);
 
-    // getting client user id
-    const client_user_id = req.user.id; 
-
-    try {
-        
-    } catch (error) {
-        
-    }
-}
+    res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error: error instanceof Error ? error.message : "unknow error",
+    });
+  }
+};
