@@ -1,9 +1,6 @@
 import express from "express";
 import { pool } from "../../config/db";
 
-interface inputForprojectServie {
-  id: string;
-}
 interface outputForprojectService {
   id: string;
   name: string;
@@ -14,12 +11,14 @@ interface outputForprojectService {
   created_at: Date;
   updated_at: Date;
   client_name: string;
-  client_email: string;1
+  client_email: string;
+  1;
 }
 
-export const getallProjectsinitiatoradminOnly = async () : Promise <outputForprojectService[]> => {
-
-    const result = await pool.query(`SELECT 
+export const getallProjectsinitiatoradminOnly = async (): Promise<
+  outputForprojectService[]
+> => {
+  const result = await pool.query(`SELECT 
         p.id,
         p.name,
         p.description,
@@ -35,6 +34,26 @@ export const getallProjectsinitiatoradminOnly = async () : Promise <outputForpro
         ORDER BY p.created_at DESC
         `);
 
-        return result.rows;
+  return result.rows;
+};
 
+export const getallProjectsSpecifictoClientService = async (
+  client_user_id: string,
+): Promise<outputForprojectService[]> => {
+    const result = await pool.query(`SELECT 
+
+      id,
+      name,
+      description,
+      client_user_id,
+      service_request_id,
+      status,
+      created_at,
+      updated_at,
+      name AS client_name,
+      email AS client_email
+
+      FROM projects WHERE client_user_id = $1`,[client_user_id])
+
+  return result.rows;
 };
