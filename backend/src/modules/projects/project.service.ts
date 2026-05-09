@@ -12,7 +12,6 @@ interface outputForprojectService {
   updated_at: Date;
   client_name: string;
   client_email: string;
-  1;
 }
 
 export const getallProjectsinitiatoradminOnly = async (): Promise<
