@@ -9,6 +9,8 @@ const router = express.Router();
 
 
 router.get("/all-projects",authenticate,authorizeRoles('admin'),getallProjectsinitiatoradminOnlyController);
+router.get("/my",authenticate,authorizeRoles('client'));
+
 
 
 export default router;
