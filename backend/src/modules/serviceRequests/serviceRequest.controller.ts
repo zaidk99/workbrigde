@@ -127,7 +127,7 @@ export const approverejectSeriviceRequestAdminonlyController = async (
 
     const result = await approverejectSeriviceRequestAdminonly(id , status);
     if(!result){
-      res.status(404).json({message:"service request status problem and project not created"});
+      res.status(409).json({message:"service request status problem and project not created"});
       return;
     }
     res.status(200).json({
