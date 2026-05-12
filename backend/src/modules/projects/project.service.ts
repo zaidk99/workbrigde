@@ -57,3 +57,34 @@ export const getallProjectsSpecifictoClientService = async (
 
   return result.rows;
 };
+
+export const getallassignedprojectsbyemployeeService = async (
+  employee_user_id: string,
+): Promise<outputForprojectService[]> => {
+  const result = await pool.query(
+  `SELECT 
+
+  pe.project_id,
+  pe.assigned_at,
+
+  p.name,
+  p.description,
+  p.service_request_id,
+  p.status,
+  p.created_at,
+  p.updated_at,
+
+
+  u.name AS client_name
+
+  FROM project_employees pe 
+  JOIN projects p
+     ON pe.project_id = p.id
+  JOIN users u 
+     ON p.client_user_id = u.id
+  WHERE pe.employee_id = $1`,
+  [employee_user_id],
+  );
+
+  return result.rows;
+};
