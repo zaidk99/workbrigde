@@ -90,7 +90,7 @@ export const getallassignedprojectsbyemployeeService = async (
 };
 
 
-export const getProjectsByid = async (project_id:string,user_role:string , user_id:string):Promise<outputForprojectService | null> => {
+export const getProjectsByidservice = async (project_id:string,user_role:string , user_id:string):Promise<outputForprojectService | null> => {
 
 const getProject = await pool.query(`
   
@@ -112,7 +112,7 @@ const getProject = await pool.query(`
 const project = getProject.rows[0];
 
 if(!project){
-  return null
+  throw new Error("project does not exist");
 }
 
 if(user_role === 'admin'){
@@ -123,7 +123,7 @@ if(user_role === 'client'){
   if(project.client_user_id === user_id){
     return project;
   }
-  return null;
+   throw new Error("unauthorized");
 };
 
 if(user_role === 'employee'){
@@ -131,12 +131,14 @@ if(user_role === 'employee'){
       SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,
     [project_id,user_id]);
 
-    if(assignedproject.rows[0]){
-      return project;
+    if(!assignedproject.rows[0]){
+      throw new Error("unauthorized");
     }
-    return null;
+
+    return project;
+    
 }
 
-return null ;
+  throw new Error("unauthorized");
 
  } 
