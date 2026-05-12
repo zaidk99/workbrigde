@@ -88,3 +88,55 @@ export const getallassignedprojectsbyemployeeService = async (
 
   return result.rows;
 };
+
+
+export const getProjectsByid = async (project_id:string,user_role:string , user_id:string):Promise<outputForprojectService | null> => {
+
+const getProject = await pool.query(`
+  
+  SELECT 
+  
+  id,
+  name,
+  description,
+  client_user_id,
+  service_request_id,
+  status,
+  created_at,
+  updated_at
+
+  FROM projects WHERE id = $1`,
+  [project_id]
+);
+
+const project = getProject.rows[0];
+
+if(!project){
+  return null
+}
+
+if(user_role === 'admin'){
+  return project;
+}
+
+if(user_role === 'client'){
+  if(project.client_user_id === user_id){
+    return project;
+  }
+  return null;
+};
+
+if(user_role === 'employee'){
+   const assignedproject = await pool.query(`
+      SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,
+    [project_id,user_id]);
+
+    if(assignedproject.rows[0]){
+      return project;
+    }
+    return null;
+}
+
+return null ;
+
+ } 

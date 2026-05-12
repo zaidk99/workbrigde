@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.get("/all-projects",authenticate,authorizeRoles('admin'),getallProjectsinitiatoradminOnlyController);
 router.get("/my",authenticate,authorizeRoles('client'),getallProjectsSpecifictoClientController);
-router.get("/assigned",authenticate,authorizeRoles('employee'),getallassignedprojectsbyemployeeController)
+router.get("/assigned",authenticate,authorizeRoles('employee'),getallassignedprojectsbyemployeeController);
+router.get("/:id")
 
 export default router;
