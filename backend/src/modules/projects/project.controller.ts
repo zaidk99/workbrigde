@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  getallassignedprojectsbyemployeeService,
   getallProjectsinitiatoradminOnly,
   getallProjectsSpecifictoClientService,
 } from "./project.service";
@@ -67,3 +68,33 @@ export const getallProjectsSpecifictoClientController = async (
   }
 };
 
+export const getallassignedprojectsbyemployeeController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+    return;
+  }
+  const getEmpoyeedId = req.user.id;
+
+  try {
+    const getProjectsassigned =
+      await getallassignedprojectsbyemployeeService(getEmpoyeedId);
+    res.status(200).json({
+      success: true,
+      message: "got assigned projects successfully",
+      allassignedProjects: getProjectsassigned,
+    });
+  } catch (error: any) {
+    console.error("error fetching employee assigned projects", error);
+    res.status(500).json({
+      success: false,
+      message: "internal server error",
+      errro: error instanceof Error ? error.message : "unknown error",
+    });
+  }
+};
