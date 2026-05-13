@@ -109,7 +109,9 @@ const getProject = await pool.query(`
   [project_id]
 );
 
+
 const project = getProject.rows[0];
+
 
 if(!project){
   throw new Error("project does not exist");
@@ -141,4 +143,16 @@ if(user_role === 'employee'){
 
   throw new Error("unauthorized");
 
- } 
+ };
+
+
+ //service for  assigning projects 
+
+
+ export const assigningEmployeetospecificProject = async()=>{
+
+  
+ }
+
+
+

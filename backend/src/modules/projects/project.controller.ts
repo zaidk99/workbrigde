@@ -115,6 +115,7 @@ export const getProjectsByidcontroller = async (
   const user_role = req.user.role;
   const user_id = req.user.id;
   const { project_id } = req.params;
+  console.log("the project id is : " , project_id);
 
   try {
     const getProjectByid = await getProjectsByidservice(
