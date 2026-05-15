@@ -13,6 +13,6 @@ router.get("/my",authenticate,authorizeRoles('client'),getallProjectsSpecifictoC
 router.get("/assigned",authenticate,authorizeRoles('employee'),getallassignedprojectsbyemployeeController);
 router.get("/:project_id",authenticate,authorizeRoles('client','employee','admin'),getProjectsByidcontroller);
 // api to assign employees admin only
-router.post("")
+router.post("/assinging-employees",authenticate,authorizeRoles('client'));
 
 export default router;
