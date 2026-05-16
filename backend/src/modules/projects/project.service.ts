@@ -145,6 +145,26 @@ if(user_role === 'employee'){
 
  };
 
+const getEmpolyeesandthereworkloadforassigningProjects = async ()=>{
+      const allEmployees = await pool.query(`
+        
+        // get all the employees and there no of projects and return 
+
+        SELECT 
+        u.id,
+        u.name,
+        COUNT(pe.project_id) AS project_count
+        FROM users
+        LEFT JOIN project_employees pe ON pe.employee_id = u.user_id
+        WHERE u.id = 'employee'
+        AND u.is_active = true
+        GROUP BY u.id,u.name
+        ORDER BY project_count ASC
+        `);
+
+        return allEmployees.rows;
+ }
+
 
  //service for  assigning projects 
 
