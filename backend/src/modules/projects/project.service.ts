@@ -145,7 +145,7 @@ if(user_role === 'employee'){
 
  };
 
-const getEmpolyeesandthereworkloadforassigningProjects = async ()=>{
+export const getEmpolyeesandthereworkloadforassigningProjects = async (project_id:string)=>{
       const allEmployees = await pool.query(`
         
         // get all the employees and there no of projects and return 
@@ -154,10 +154,14 @@ const getEmpolyeesandthereworkloadforassigningProjects = async ()=>{
         u.id,
         u.name,
         COUNT(pe.project_id) AS project_count
-        FROM users
-        LEFT JOIN project_employees pe ON pe.employee_id = u.user_id
-        WHERE u.id = 'employee'
+        FROM users u
+        LEFT JOIN project_employees pe ON pe.employee_id = u.id
+        WHERE u.role = 'employee'
         AND u.is_active = true
+		    AND u.id NOT IN (
+			SELECT employee_id FROM project_employees
+			WHERE project_id = $1
+		)
         GROUP BY u.id,u.name
         ORDER BY project_count ASC
         `);
@@ -169,9 +173,8 @@ const getEmpolyeesandthereworkloadforassigningProjects = async ()=>{
  //service for  assigning projects 
 
 
- export const assigningEmployeetospecificProject = async()=>{
+ export const assigningEmployeetospecificProject = async(project_id:string)=>{
      
-
  }
 
 
