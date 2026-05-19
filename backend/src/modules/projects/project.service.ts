@@ -213,8 +213,9 @@ export const assigningEmployeetospecificProject = async (
     `INSERT INTO project_employees (project_id,employee_id)
      VALUES ${values}`,[project_id,...toAssign]
   );
-
 }
+
+
 return {
     assigned: toAssign,                      // successfully assigned
     already_assigned: allreadyAssignedList,  // were already on project
