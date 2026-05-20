@@ -153,3 +153,8 @@ export const getProjectsByidcontroller = async (
     });
   }
 };
+
+
+export const getEmpolyeesandthereworkloadforassigningProjectsController = async(req:Request , res:Response)=>{
+
+}
