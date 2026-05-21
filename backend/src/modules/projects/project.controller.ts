@@ -157,6 +157,7 @@ export const getProjectsByidcontroller = async (
 
 
 export const getEmpolyeesandthereworkloadforassigningProjectsController = async(req:Request , res:Response)=>{
+  console.log("inside controller");
   if(!req.user){
     res.status(401).json({
       success:false,
@@ -164,8 +165,9 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
     });
     return;
   }
+  const checkproject_idmatchingemployee = req.body;
   try {
-    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects();
+    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(checkproject_idmatchingemployee);
     res.status(200).json({
       success:true,
       message:"Successfully got the emloyees and there workload",
@@ -173,7 +175,7 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
     });
     
   } catch (error:any) {
-    console.log("Error Fetchin employees and there workload",error);
+    console.log("Error Fetching employees and there workload",error);
     res.status(500).json({
       success:false,
       message:"internal error",

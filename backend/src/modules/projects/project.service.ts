@@ -146,11 +146,9 @@ export const getProjectsByidservice = async (
   throw new Error("unauthorized");
 };
 
-export const getEmpolyeesandthereworkloadforassigningProjects = async () => {
+export const getEmpolyeesandthereworkloadforassigningProjects = async (project_id:string) => {
+   console.log("inside service");
   const allEmployees = await pool.query(`
-        
-        // get all the employees and there no of projects and return 
-
         SELECT 
         u.id,
         u.name,
@@ -165,6 +163,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async () => {
         GROUP BY u.id,u.name
         ORDER BY project_count ASC
         `);
+  console.log("after query");
 
   return allEmployees.rows;
 };
