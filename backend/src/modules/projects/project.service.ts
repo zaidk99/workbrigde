@@ -146,9 +146,7 @@ export const getProjectsByidservice = async (
   throw new Error("unauthorized");
 };
 
-export const getEmpolyeesandthereworkloadforassigningProjects = async (
-  project_id: string,
-) => {
+export const getEmpolyeesandthereworkloadforassigningProjects = async () => {
   const allEmployees = await pool.query(`
         
         // get all the employees and there no of projects and return 

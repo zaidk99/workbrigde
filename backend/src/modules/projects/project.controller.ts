@@ -3,6 +3,7 @@ import {
   getallassignedprojectsbyemployeeService,
   getallProjectsinitiatoradminOnly,
   getallProjectsSpecifictoClientService,
+  getEmpolyeesandthereworkloadforassigningProjects,
   getProjectsByidservice,
 } from "./project.service";
 
@@ -156,5 +157,29 @@ export const getProjectsByidcontroller = async (
 
 
 export const getEmpolyeesandthereworkloadforassigningProjectsController = async(req:Request , res:Response)=>{
-
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      message:"Unauthorized"
+    });
+    return;
+  }
+  try {
+    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects();
+    res.status(200).json({
+      success:true,
+      message:"Successfully got the emloyees and there workload",
+      allemployeesWorkload : employeesWorkload
+    });
+    
+  } catch (error:any) {
+    console.log("Error Fetchin employees and there workload",error);
+    res.status(500).json({
+      success:false,
+      message:"internal error",
+      error: error instanceof Error 
+      ? error.message
+      : "unknown error",
+    });
+  }  
 }
