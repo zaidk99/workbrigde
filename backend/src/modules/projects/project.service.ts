@@ -164,6 +164,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
         ORDER BY project_count ASC
         `);
   console.log("after query");
+  //  fix
 
   return allEmployees.rows;
 };
