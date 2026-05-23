@@ -147,7 +147,6 @@ export const getProjectsByidservice = async (
 };
 
 export const getEmpolyeesandthereworkloadforassigningProjects = async (project_id:string) => {
-   console.log("inside service");
   const allEmployees = await pool.query(`
         SELECT 
         u.id,
@@ -162,11 +161,9 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
 			      WHERE project_id = $1)
         GROUP BY u.id,u.name
         ORDER BY project_count ASC
-        `);
-  console.log("after query");
-  //  fixing
-
+        `,[project_id]);
   return allEmployees.rows;
+  // need to correct query 
 };
 
 //service for  assigning projects

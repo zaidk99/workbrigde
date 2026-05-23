@@ -10,3 +10,7 @@ export const usePasswordCompare = async (userPassword:string  , hashedPassword:s
     return await bcrypt.compare(userPassword, hashedPassword);
 };
 
+
+// userPasswordHash("password123").then(hash=>{
+//     console.log(hash);
+// });

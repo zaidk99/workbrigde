@@ -157,7 +157,7 @@ export const getProjectsByidcontroller = async (
 
 
 export const getEmpolyeesandthereworkloadforassigningProjectsController = async(req:Request , res:Response)=>{
-  console.log("inside controller");
+
   if(!req.user){
     res.status(401).json({
       success:false,
@@ -165,9 +165,9 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
     });
     return;
   }
-  const checkproject_idmatchingemployee = req.body;
+  const {checkproject_idmatchingemployee} = req.query ;
   try {
-    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(checkproject_idmatchingemployee);
+    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(checkproject_idmatchingemployee as string);
     res.status(200).json({
       success:true,
       message:"Successfully got the emloyees and there workload",
