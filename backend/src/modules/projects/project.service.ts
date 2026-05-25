@@ -164,6 +164,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
         `,[project_id]);
   return allEmployees.rows;
   // need to correct query 
+  // query changes  needed 
 };
 
 //service for  assigning projects
