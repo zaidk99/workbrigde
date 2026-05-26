@@ -162,7 +162,10 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
   //       GROUP BY u.id,u.name
   //       ORDER BY project_count ASC
   //       `,[project_id]);
-  
+  const allEmployees = await pool.query(`
+     
+    
+    `,[project_id])
   return allEmployees.rows;
   // need to correct query 
   // query changes  needed 
