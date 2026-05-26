@@ -147,21 +147,22 @@ export const getProjectsByidservice = async (
 };
 
 export const getEmpolyeesandthereworkloadforassigningProjects = async (project_id:string) => {
-  const allEmployees = await pool.query(`
-        SELECT 
-        u.id,
-        u.name,
-        COUNT(pe.project_id) AS project_count
-          FROM users u
-          LEFT JOIN project_employees pe ON pe.employee_id = u.id
-            WHERE u.role = 'employee'
-            AND u.is_active = true
-		        AND u.id NOT IN (
-			      SELECT employee_id FROM project_employees
-			      WHERE project_id = $1)
-        GROUP BY u.id,u.name
-        ORDER BY project_count ASC
-        `,[project_id]);
+  // const allEmployees = await pool.query(
+  //   `   SELECT 
+  //       u.id,
+  //       u.name,
+  //       COUNT(pe.project_id) AS project_count
+  //         FROM users u
+  //         LEFT JOIN project_employees pe ON pe.employee_id = u.id
+  //           WHERE u.role = 'employee'
+  //           AND u.is_active = true
+	// 	        AND u.id NOT IN (
+	// 		      SELECT employee_id FROM project_employees
+	// 		      WHERE project_id = $1)
+  //       GROUP BY u.id,u.name
+  //       ORDER BY project_count ASC
+  //       `,[project_id]);
+  
   return allEmployees.rows;
   // need to correct query 
   // query changes  needed 
