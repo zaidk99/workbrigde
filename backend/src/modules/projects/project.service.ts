@@ -163,6 +163,10 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
   //       ORDER BY project_count ASC
   //       `,[project_id]);
   const allEmployees = await pool.query(`
+    SELECT 
+    u.id,
+    u.name,
+    // correction needed
      
     
     `,[project_id])
