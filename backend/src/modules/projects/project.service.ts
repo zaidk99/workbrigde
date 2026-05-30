@@ -166,7 +166,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     SELECT 
     u.id,
     u.name,
-    // correction needed
+    // correction needed with counting and excluding already assigned
      
     
     `,[project_id])
