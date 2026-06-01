@@ -166,6 +166,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     SELECT 
     u.id,
     u.name,
+    COUNT(pe.project_id)
    
      
     
