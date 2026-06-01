@@ -166,9 +166,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     SELECT 
     u.id,
     u.name,
-    // correction needed with counting and excluding already assigned employees 
-
-    // left join with project - employees with u.id 
+   
      
     
     `,[project_id])
