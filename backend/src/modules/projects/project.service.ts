@@ -167,7 +167,8 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     u.id,
     u.name,
    // TO NOT INCLUDE THOSE ALREADY ASSIGNED and then group
-   
+   // first we need to bring the user ad pe
+
    
      
     
