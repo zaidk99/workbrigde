@@ -166,7 +166,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     SELECT 
     u.id,
     u.name,
-   // TO NOT INCLUDE THOSE ALREADY ASSIGNED and then group
+   // TO NOT INCLUDE THOSE ALREADY ASSIGNED and then group -- issue
    
 
    
