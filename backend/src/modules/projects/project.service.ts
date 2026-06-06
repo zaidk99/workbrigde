@@ -163,9 +163,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
   //       ORDER BY project_count ASC
   //       `,[project_id]);
   const allEmployees = await pool.query(`
-    SELECT 
-    u.id,
-    u.name,
+  
    
    
 
@@ -174,8 +172,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
     
     `,[project_id])
   return allEmployees.rows;
-  // need to correct query 
-  // query changes  needed 
+  // need to correct  query changes  needed 
 };
 
 //service for  assigning projects
