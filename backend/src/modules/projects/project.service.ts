@@ -163,10 +163,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
         ORDER BY project_count ASC
         `,[project_id]);
   return allEmployees.rows;
-  // need to correct  query changes  needed 
 };
-
-//service for  assigning projects
 
 export const assigningEmployeetospecificProject = async (
   project_id: string, assigned_employees:string[]
