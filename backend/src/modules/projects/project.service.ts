@@ -28,7 +28,6 @@ export const getallProjectsinitiatoradminOnly = async (): Promise<
         p.updated_at,
         u.name AS client_name,
         u.email AS client_email
-
         FROM projects p JOIN users u ON u.id = p.client_user_id
         ORDER BY p.created_at DESC
         `);
@@ -41,7 +40,6 @@ export const getallProjectsSpecifictoClientService = async (
 ): Promise<outputForprojectService[]> => {
   const result = await pool.query(
     `SELECT 
-
       id,
       name,
       description,
@@ -162,7 +160,6 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
         GROUP BY u.id,u.name
         ORDER BY project_count ASC
         `,[project_id]);
-    // wrong results are coming
   return allEmployees.rows;
 };
 
