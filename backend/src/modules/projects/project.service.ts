@@ -158,8 +158,8 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (project_i
 			      SELECT employee_id FROM project_employees
 			      WHERE project_id = $1)
         GROUP BY u.id,u.name
-        ORDER BY project_count ASC
-        `,[project_id]);
+        ORDER BY project_count ASC 
+        `,[project_id]);  // incorrect result
   return allEmployees.rows;
 };
 
