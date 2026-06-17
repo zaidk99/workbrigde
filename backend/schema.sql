@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS project_files(
 );
 
 
--- project employee table
+-- project employees table
 CREATE TABLE IF NOT EXISTS project_employees(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
