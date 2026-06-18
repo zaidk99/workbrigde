@@ -144,72 +144,77 @@ export const getProjectsByidservice = async (
   throw new Error("unauthorized");
 };
 
-export const getEmpolyeesandthereworkloadforassigningProjects = async (project_id:string) => {
+export const getEmpolyeesandthereworkloadforassigningProjects = async (
+  project_id: string,
+) => {
   const allEmployees = await pool.query(
-    `   SELECT 
-        u.id,
-        u.name,
-        COUNT(pe.project_id) AS project_count
-          FROM users u
-          LEFT JOIN project_employees pe ON pe.employee_id = u.id
-            WHERE u.role = 'employee'
-            AND u.is_active = true
-		        AND u.id NOT IN (
-			      SELECT employee_id FROM project_employees
-			      WHERE project_id = $1)
-        GROUP BY u.id,u.name
-        ORDER BY project_count ASC 
-        `,[project_id]);  // incorrect result
+  `SELECT 
+    u.id,
+    u.name,
+    COUNT(pe2.project_id) AS total_projects
+FROM project_employees pe1
+JOIN users u ON u.id = pe1.employee_id
+LEFT JOIN project_employees pe2 
+    ON pe2.employee_id = pe1.employee_id 
+    AND pe2.project_id != $1
+WHERE pe1.project_id = $1
+GROUP BY u.id, u.name
+ORDER BY total_projects ASC`,
+[project_id]
+  ); 
   return allEmployees.rows;
 };
 
 export const assigningEmployeetospecificProject = async (
-  project_id: string, assigned_employees:string[]
+  project_id: string,
+  assigned_employees: string[],
 ) => {
-
   const validEmps = await pool.query(
     ` 
     SELECT id FROM users 
     WHERE id = ANY($1::uuid[])
     AND role = 'employee'
     AND is_active = true `,
-    [assigned_employees]
-
+    [assigned_employees],
   );
 
-  const validIds = new Set(validEmps.rows.map(r=>r.id));
-  const invalidIds = assigned_employees.filter(id=>!validIds.has(id));
+  const validIds = new Set(validEmps.rows.map((r) => r.id));
+  const invalidIds = assigned_employees.filter((id) => !validIds.has(id));
 
-  const allreadyAssigned = await pool.query(`
+  const allreadyAssigned = await pool.query(
+    `
     SELECT employee_id FROM project_employees
     WHERE project_id = $1
-    AND employee_id = ANY($2::uuid[])`,[project_id,assigned_employees]);
+    AND employee_id = ANY($2::uuid[])`,
+    [project_id, assigned_employees],
+  );
 
-
-  const assignedIdsalready = new Set(allreadyAssigned.rows.map(r=>r.employee_id));
-  const allreadyAssignedList = assigned_employees.filter(id=>assignedIdsalready.has(id));
-
+  const assignedIdsalready = new Set(
+    allreadyAssigned.rows.map((r) => r.employee_id),
+  );
+  const allreadyAssignedList = assigned_employees.filter((id) =>
+    assignedIdsalready.has(id),
+  );
 
   const toAssign = assigned_employees.filter(
-    id=>validIds.has(id) && !assignedIdsalready.has(id)
+    (id) => validIds.has(id) && !assignedIdsalready.has(id),
   );
 
   // bulk insert the employees
 
-  if(toAssign.length > 0){
-      const values = toAssign.map((_,i)=>`($1,$${i+2})`).join(',');
+  if (toAssign.length > 0) {
+    const values = toAssign.map((_, i) => `($1,$${i + 2})`).join(",");
 
-  await pool.query(
-    `INSERT INTO project_employees (project_id,employee_id)
-     VALUES ${values}`,[project_id,...toAssign]
-  );
-}
+    await pool.query(
+      `INSERT INTO project_employees (project_id,employee_id)
+     VALUES ${values}`,
+      [project_id, ...toAssign],
+    );
+  }
 
-
-return {
-    assigned: toAssign,                      // successfully assigned
-    already_assigned: allreadyAssignedList,  // were already on project
-    invalid: invalidIds,                     // don't exist or not employees
+  return {
+    assigned: toAssign, // successfully assigned
+    already_assigned: allreadyAssignedList, // were already on project
+    invalid: invalidIds, // don't exist or not employees
   };
-
 };
