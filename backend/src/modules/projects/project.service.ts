@@ -148,7 +148,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (
   project_id: string,
 ) => {
   const allEmployees = await pool.query(
-  `SELECT 
+    `SELECT 
     u.id,
     u.name,
     COUNT(pe2.project_id) AS total_projects
@@ -160,8 +160,8 @@ LEFT JOIN project_employees pe2
 WHERE pe1.project_id = $1
 GROUP BY u.id, u.name
 ORDER BY total_projects ASC`,
-[project_id]
-  ); 
+    [project_id],// testing
+  );
   return allEmployees.rows;
 };
 
