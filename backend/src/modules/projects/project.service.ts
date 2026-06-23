@@ -160,7 +160,7 @@ LEFT JOIN project_employees pe2
 WHERE pe1.project_id = $1
 GROUP BY u.id, u.name
 ORDER BY total_projects ASC`,
-    [project_id],// testing
+    [project_id],// checking results and testing
   );
   return allEmployees.rows;
 };
