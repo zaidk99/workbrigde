@@ -151,7 +151,7 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (
     `SELECT 
     u.id,
     u.name,
-    COUNT(pe2.project_id) AS total_projects
+    COUNT(pe2.project_id)::int AS total_projects
 FROM project_employees pe1
 JOIN users u ON u.id = pe1.employee_id
 LEFT JOIN project_employees pe2 

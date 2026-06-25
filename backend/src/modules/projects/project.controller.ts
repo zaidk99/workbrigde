@@ -165,9 +165,9 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
     });
     return;
   }
-  const {checkproject_idmatchingemployee} = req.query ;
+  const {project_id} = req.query ;
   try {
-    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(checkproject_idmatchingemployee as string);
+    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(project_id as string);
     res.status(200).json({
       success:true,
       message:"Successfully got the emloyees and there workload",
