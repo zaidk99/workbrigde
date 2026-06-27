@@ -165,7 +165,7 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
     });
     return;
   }
-  const {project_id} = req.query ;
+  const {project_id} = req.params ;
   try {
     const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(project_id as string);
     res.status(200).json({
