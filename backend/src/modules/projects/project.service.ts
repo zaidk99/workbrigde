@@ -165,4 +165,9 @@ ORDER BY total_projects ASC`,
   return allEmployees.rows;
 };
 
-
+export const assignEmployeestoProject = async ()=>{
+  const assignedEmployees = await pool.query(`
+     INSERT INTO project_employees 
+       
+    `)
+}
