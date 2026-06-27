@@ -168,6 +168,8 @@ ORDER BY total_projects ASC`,
 export const assignEmployeestoProject = async ()=>{
   const assignedEmployees = await pool.query(`
      INSERT INTO project_employees 
-       
+       (project_id , employee_id)
+       SELECT $1, UNNEST($2::uuid[])
+       ON CONFLICT (project_id,employee_id) DO NOTHING;
     `)
 }
