@@ -1,7 +1,7 @@
 import express from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { authorizeRoles } from "../../middleware/authorizeRoles";
-import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller } from "./project.controller";
+import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller, unassignEmployeestoProjectController } from "./project.controller";
 
 
 
@@ -16,6 +16,6 @@ router.get("/:project_id",authenticate,authorizeRoles('client','employee','admin
 // api to assign employees admin only
 router.post("/:project_id/assinging-employees",authenticate,authorizeRoles('admin'),assignEmployeestoProjectController);
 // api to unassign employees admin only
-router.post("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'));
+router.post("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'),unassignEmployeestoProjectController);
 
 export default router;
