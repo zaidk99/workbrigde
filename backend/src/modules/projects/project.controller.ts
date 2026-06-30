@@ -6,9 +6,10 @@ import {
   getallProjectsSpecifictoClientService,
   getEmpolyeesandthereworkloadforassigningProjects,
   getProjectsByidservice,
+  unassignEmployeestoProjectService,
 } from "./project.service";
 
-interface AssignEmployeesBody{
+interface UnAssignAndAssignEmployeesBody{
   employee_ids : string[];
 };
 
@@ -203,7 +204,7 @@ export const assignEmployeestoProjectController = async (req:Request , res:Respo
   }
 
   const {project_id}  = req.params;
-  const {employee_ids} = req.body as AssignEmployeesBody;
+  const {employee_ids} = req.body as UnAssignAndAssignEmployeesBody;
 
   try {
     const assignedEmployeesDone = await assignEmployeestoProjectService(project_id as string,employee_ids);
@@ -213,7 +214,7 @@ export const assignEmployeestoProjectController = async (req:Request , res:Respo
       assignedEmployees : assignedEmployeesDone
     });
   } catch (error:any) {
-    console.log("Error Assigning Employees to the Project",error);
+    console.log("error assigning employees to project",error);
     res.status(500).json({
       success:false,
       error:error instanceof Error 
@@ -222,3 +223,36 @@ export const assignEmployeestoProjectController = async (req:Request , res:Respo
     });
   }
 };
+
+export const unassignEmployeestoProjectController = async(req:Request , res:Response)=>{
+
+  if(!req.user){
+     res.status(401).json({
+      success:false,
+      message:"unauthorized",
+     })
+     return;
+  }
+
+
+  const {project_id} = req.params;
+  const {employee_ids} = req.body as UnAssignAndAssignEmployeesBody;
+
+  try {
+
+  const unassignedEmployeesDone = await unassignEmployeestoProjectService(project_id as string,employee_ids);
+  res.status(200).json({
+    success:true,
+    message:"successfully unassigned employees to project",
+    unassignEmployees:unassignedEmployeesDone
+  }); 
+  } catch (error:any) {
+    console.log("error unassigning employees to project",error);
+    res.status(500).json({
+      success:false,
+      error:error instanceof Error
+      ? error.message
+      : "unknown error"
+    });
+  }
+}
