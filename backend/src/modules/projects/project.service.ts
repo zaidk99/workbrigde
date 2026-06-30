@@ -165,12 +165,12 @@ ORDER BY total_projects ASC`,
   return allEmployees.rows;
 };
 
-export const assignEmployeestoProjectService = async (project_id:string , employee_id:string )=>{
+export const assignEmployeestoProjectService = async (project_id:string , employee_ids:string[] )=>{
   const assignedEmployees = await pool.query(`
      INSERT INTO project_employees 
        (project_id , employee_id)
        SELECT $1, UNNEST($2::uuid[])
-       ON CONFLICT (project_id,employee_id) DO NOTHING;
-    `,[project_id,employee_id]);
+       ON CONFLICT (project_id,employee_ids) DO NOTHING;
+    `,[project_id,employee_ids]);
     return assignedEmployees.rows;
 }

@@ -8,6 +8,11 @@ import {
   getProjectsByidservice,
 } from "./project.service";
 
+interface AssignEmployeesBody{
+  employee_ids : string[];
+};
+
+
 export const getallProjectsinitiatoradminOnlyController = async (
   req: Request,
   res: Response,
@@ -198,11 +203,10 @@ export const assignEmployeestoProjectController = async (req:Request , res:Respo
   }
 
   const {project_id}  = req.params;
-  const {employee_id} = req.body;
+  const {employee_ids} = req.body as AssignEmployeesBody;
 
   try {
-
-    const assignedEmployeesDone = assignEmployeestoProjectService(project_id as string,employee_id);
+    const assignedEmployeesDone = await assignEmployeestoProjectService(project_id as string,employee_ids);
     res.status(200).json({
       success:true,
       message:"successfully assigned employees to project",
@@ -217,4 +221,4 @@ export const assignEmployeestoProjectController = async (req:Request , res:Respo
       : "unknown error",
     });
   }
-}
+};
