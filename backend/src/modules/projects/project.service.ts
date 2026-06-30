@@ -151,13 +151,14 @@ export const getEmpolyeesandthereworkloadforassigningProjects = async (
     `SELECT 
     u.id,
     u.name,
-    COUNT(pe2.project_id)::int AS total_projects
-FROM project_employees pe1
-JOIN users u ON u.id = pe1.employee_id
-LEFT JOIN project_employees pe2 
-    ON pe2.employee_id = pe1.employee_id 
-    AND pe2.project_id != $1
-WHERE pe1.project_id = $1
+    COUNT(pe.project_id) AS total_projects
+FROM users u
+LEFT JOIN project_employees pe ON pe.employee_id = u.id
+WHERE u.role = 'employee' 
+  AND u.is_active = true
+  AND u.id NOT IN (
+      SELECT employee_id FROM project_employees WHERE project_id = $1
+  )
 GROUP BY u.id, u.name
 ORDER BY total_projects ASC`,
     [project_id],
@@ -170,7 +171,18 @@ export const assignEmployeestoProjectService = async (project_id:string , employ
      INSERT INTO project_employees 
        (project_id , employee_id)
        SELECT $1, UNNEST($2::uuid[])
-       ON CONFLICT (project_id,employee_ids) DO NOTHING;
+       ON CONFLICT (project_id,employee_id) DO NOTHING
+       RETURNING *;
     `,[project_id,employee_ids]);
     return assignedEmployees.rows;
+};
+
+export const unassignEmployeestoProjectService = async (project_id:string , employee_ids:string[])=>{
+  const unassignedEmployees = await pool.query(`
+    DELETE INTO project_employees
+    (project_id,employee_id)
+    SELECT $1,UNNEST($2::uuid[])
+    RETURNING *;
+    `,[project_id,employee_ids]);
+    return unassignedEmployees.rows;
 }
