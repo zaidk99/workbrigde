@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  assignEmployeestoProjectService,
   getallassignedprojectsbyemployeeService,
   getallProjectsinitiatoradminOnly,
   getallProjectsSpecifictoClientService,
@@ -184,4 +185,36 @@ export const getEmpolyeesandthereworkloadforassigningProjectsController = async(
       : "unknown error",
     });
   }  
+}
+
+export const assignEmployeestoProjectController = async (req:Request , res:Response)=>{
+
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      message:"unauthorized",
+    });
+    return;
+  }
+
+  const {project_id}  = req.params;
+  const {employee_id} = req.body;
+
+  try {
+
+    const assignedEmployeesDone = assignEmployeestoProjectService(project_id as string,employee_id);
+    res.status(200).json({
+      success:true,
+      message:"successfully assigned employees to project",
+      assignedEmployees : assignedEmployeesDone
+    });
+  } catch (error:any) {
+    console.log("Error Assigning Employees to the Project",error);
+    res.status(500).json({
+      success:false,
+      error:error instanceof Error 
+      ? error.message
+      : "unknown error",
+    });
+  }
 }

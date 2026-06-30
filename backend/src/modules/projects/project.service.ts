@@ -165,7 +165,7 @@ ORDER BY total_projects ASC`,
   return allEmployees.rows;
 };
 
-export const assignEmployeestoProject = async (project_id:string , employee_id:string )=>{
+export const assignEmployeestoProjectService = async (project_id:string , employee_id:string )=>{
   const assignedEmployees = await pool.query(`
      INSERT INTO project_employees 
        (project_id , employee_id)
