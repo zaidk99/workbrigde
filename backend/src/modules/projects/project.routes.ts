@@ -15,5 +15,7 @@ router.get("/:project_id/employeesandworkload",authenticate,authorizeRoles('admi
 router.get("/:project_id",authenticate,authorizeRoles('client','employee','admin'),getProjectsByidcontroller);
 // api to assign employees admin only
 router.post("/:project_id/assinging-employees",authenticate,authorizeRoles('admin'),assignEmployeestoProjectController);
+// api to unassign employees admin only
+router.post("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'));
 
 export default router;
