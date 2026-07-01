@@ -14,6 +14,12 @@ interface outputForprojectService {
   client_email: string;
 }
 
+interface AssignedEmployeeOutput {
+  id:string;
+  name:string;
+  email:string;
+}
+
 export const getallProjectsinitiatoradminOnly = async (): Promise<
   outputForprojectService[]
 > => {
@@ -179,10 +185,20 @@ export const assignEmployeestoProjectService = async (project_id:string , employ
 
 export const unassignEmployeestoProjectService = async (project_id:string , employee_ids:string[])=>{
   const unassignedEmployees = await pool.query(`
-    DELETE INTO project_employees
-    (project_id,employee_id)
-    SELECT $1,UNNEST($2::uuid[])
+    DELETE FROM project_employees 
+    WHERE project_id = $1 AND employee_id = ANY($2::uuid[])
     RETURNING *;
     `,[project_id,employee_ids]);
     return unassignedEmployees.rows;
-}
+};
+
+
+export const getAssignedEmployeesofAprojectService = async (project_id:string):Promise<AssignedEmployeeOutput[]>=>{
+  const assignedEmp = await pool.query(`
+    SELECT u.id , u.name , u.email 
+    FROM users u
+    JOIN project_employees pe ON pe.employee_id = u.id 
+    WHERE pe.project_id = $1 AND u.role = 'employee' AND u.is_active = true;`,[project_id]);
+    return assignedEmp.rows;
+};
+

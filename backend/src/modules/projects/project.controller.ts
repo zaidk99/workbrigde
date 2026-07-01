@@ -4,6 +4,7 @@ import {
   getallassignedprojectsbyemployeeService,
   getallProjectsinitiatoradminOnly,
   getallProjectsSpecifictoClientService,
+  getAssignedEmployeesofAprojectService,
   getEmpolyeesandthereworkloadforassigningProjects,
   getProjectsByidservice,
   unassignEmployeestoProjectService,
@@ -255,4 +256,33 @@ export const unassignEmployeestoProjectController = async(req:Request , res:Resp
       : "unknown error"
     });
   }
-}
+};
+
+export const getAssignedEmployeesofAprojectController = async(req:Request , res:Response)=>{
+
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      message:"unauthorized",
+    })
+    return;
+  }
+
+  const {project_id} = req.params;
+  try {
+    const getAssignedEmp = await getAssignedEmployeesofAprojectService(project_id as string);
+    res.status(200).json({
+      success:true,
+      message:"successfully got the assigned employees",
+      AssignedEmp : getAssignedEmp,
+    });
+  } catch (error:any) {
+    console.log("error getting the assigned employees for the project",error);
+    res.status(500).json({
+      success:false,
+      error: error instanceof Error
+      ? error.message
+      : "unknown error"
+    });
+  }
+};

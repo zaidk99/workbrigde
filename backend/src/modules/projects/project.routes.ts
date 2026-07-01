@@ -1,7 +1,7 @@
 import express from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { authorizeRoles } from "../../middleware/authorizeRoles";
-import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller, unassignEmployeestoProjectController } from "./project.controller";
+import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getAssignedEmployeesofAprojectController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller, unassignEmployeestoProjectController } from "./project.controller";
 
 
 
@@ -12,10 +12,11 @@ router.get("/all-projects",authenticate,authorizeRoles('admin'),getallProjectsin
 router.get("/my",authenticate,authorizeRoles('client'),getallProjectsSpecifictoClientController);
 router.get("/assigned",authenticate,authorizeRoles('employee'),getallassignedprojectsbyemployeeController);
 router.get("/:project_id/employeesandworkload",authenticate,authorizeRoles('admin'),getEmpolyeesandthereworkloadforassigningProjectsController);
+router.get("/:project_id/employees",authenticate,authorizeRoles('admin'),getAssignedEmployeesofAprojectController);
 router.get("/:project_id",authenticate,authorizeRoles('client','employee','admin'),getProjectsByidcontroller);
 // api to assign employees admin only
-router.post("/:project_id/assinging-employees",authenticate,authorizeRoles('admin'),assignEmployeestoProjectController);
+router.post("/:project_id/assigning-employees",authenticate,authorizeRoles('admin'),assignEmployeestoProjectController);
 // api to unassign employees admin only
-router.post("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'),unassignEmployeestoProjectController);
+router.delete("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'),unassignEmployeestoProjectController);
 
 export default router;
