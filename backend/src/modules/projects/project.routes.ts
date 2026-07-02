@@ -1,7 +1,7 @@
 import express from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { authorizeRoles } from "../../middleware/authorizeRoles";
-import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getAssignedEmployeesofAprojectController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller, unassignEmployeestoProjectController } from "./project.controller";
+import { assignEmployeestoProjectController, getallassignedprojectsbyemployeeController, getallProjectsinitiatoradminOnlyController, getallProjectsSpecifictoClientController, getAssignedEmployeesofAprojectController, getEmpolyeesandthereworkloadforassigningProjectsController, getProjectsByidcontroller, projectStatusUpdateController, unassignEmployeestoProjectController } from "./project.controller";
 
 
 
@@ -18,7 +18,8 @@ router.get("/:project_id",authenticate,authorizeRoles('client','employee','admin
 router.post("/:project_id/assigning-employees",authenticate,authorizeRoles('admin'),assignEmployeestoProjectController);
 // api to unassign employees admin only
 router.delete("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'),unassignEmployeestoProjectController);
-router.patch("/:project_id/status",authenticate,authorizeRoles('employee','admin'));
+router.patch("/:project_id/status",authenticate,authorizeRoles('employee','admin'),projectStatusUpdateController);
+
 
 
 export default router;

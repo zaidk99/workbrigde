@@ -7,6 +7,7 @@ import {
   getAssignedEmployeesofAprojectService,
   getEmpolyeesandthereworkloadforassigningProjects,
   getProjectsByidservice,
+  projectStatusUpdateService,
   unassignEmployeestoProjectService,
 } from "./project.service";
 
@@ -286,3 +287,24 @@ export const getAssignedEmployeesofAprojectController = async(req:Request , res:
     });
   }
 };
+
+
+
+export const projectStatusUpdateController = async(req:Request , res:Response)=>{
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      message:"unauthorized",
+    })
+    return
+  }
+  const {project_id} = req.params;
+
+  try {
+   const updateStatus = await projectStatusUpdateService(project_id as string);
+   
+    
+  } catch (error) {
+    
+  }
+}
