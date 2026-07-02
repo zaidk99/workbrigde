@@ -202,3 +202,10 @@ export const getAssignedEmployeesofAprojectService = async (project_id:string):P
     return assignedEmp.rows;
 };
 
+export const projectStatusUpdate = async (project_id:string,status:string)=>{
+  const statusChange = await pool.query(`
+     UPDATE projects SET status = $2 WHERE id = $1
+     RETURNING *
+     ;`,[project_id , status]);
+     return statusChange.rows[0];
+};
