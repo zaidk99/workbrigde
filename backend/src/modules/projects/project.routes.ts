@@ -20,6 +20,4 @@ router.post("/:project_id/assigning-employees",authenticate,authorizeRoles('admi
 router.delete("/:project_id/unassigning-employees",authenticate,authorizeRoles('admin'),unassignEmployeestoProjectController);
 router.patch("/:project_id/status",authenticate,authorizeRoles('employee','admin'),projectStatusUpdateController);
 
-
-
 export default router;

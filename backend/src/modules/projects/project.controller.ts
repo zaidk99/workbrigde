@@ -299,12 +299,39 @@ export const projectStatusUpdateController = async(req:Request , res:Response)=>
     return
   }
   const {project_id} = req.params;
+  const {status} = req.body;
+  const user_role = req.user.role;
+  const user_id = req.user.id;
 
   try {
-   const updateStatus = await projectStatusUpdateService(project_id as string);
-   
-    
-  } catch (error) {
-    
+   const updateStatus = await projectStatusUpdateService(project_id as string,status as string,user_role as string,user_id as string);
+    if (!updateStatus) {
+    res.status(404).json({
+      success: false,
+      message: "project not found"
+    });
+    return;
+  }
+   res.status(200).json({
+    success:true,
+    message:"project status updated successfully",
+    updatedStatusdone : updateStatus
+   }); 
+  } catch (error:any) {
+    console.log("error updating the status of project",error);
+    if(error.message = "unauthorized to access the project as you are not assigned"){
+      res.status(403).json({
+        success:false,
+        message:error.message
+      });
+      return;
+    }
+    res.status(500).json({
+     success : false,
+     message: "internal error",
+     error: error instanceof Error
+     ? error.message
+     : "unknown error"
+    })
   }
 }
