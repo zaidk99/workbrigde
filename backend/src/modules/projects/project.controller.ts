@@ -319,13 +319,15 @@ export const projectStatusUpdateController = async(req:Request , res:Response)=>
    }); 
   } catch (error:any) {
     console.log("error updating the status of project",error);
-    if(error.message = "unauthorized to access the project as you are not assigned"){
+    
+    if(error.message === "unauthorized to access the project as you are not assigned"){
       res.status(403).json({
         success:false,
         message:error.message
       });
       return;
     }
+    
     res.status(500).json({
      success : false,
      message: "internal error",

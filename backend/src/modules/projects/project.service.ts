@@ -210,6 +210,15 @@ export const projectStatusUpdateService = async (project_id:string,status:string
         throw new Error("unauthorized to access the project as you are not assigned");
       }
   }
+  const currentProjectStatus = await pool.query(`SELECT status FROM projects WHERE id = $1`,[project_id]);
+  if(!currentProjectStatus.rows[0]){
+    throw new Error("project not found");
+  }
+
+  if(currentProjectStatus.rows[0].status === 'completed'){
+    throw new Error("project is already completed and status cannot be changed now");
+  }
+  
   const statusChange = await pool.query(`
      UPDATE projects SET status = $2 WHERE id = $1
      RETURNING *
