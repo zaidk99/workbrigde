@@ -11,10 +11,9 @@ import {
   unassignEmployeestoProjectService,
 } from "./project.service";
 
-interface UnAssignAndAssignEmployeesBody{
-  employee_ids : string[];
-};
-
+interface UnAssignAndAssignEmployeesBody {
+  employee_ids: string[];
+}
 
 export const getallProjectsinitiatoradminOnlyController = async (
   req: Request,
@@ -125,7 +124,7 @@ export const getProjectsByidcontroller = async (
   const user_role = req.user.role;
   const user_id = req.user.id;
   const { project_id } = req.params;
-  console.log("the project id is : " , project_id);
+  console.log("the project id is : ", project_id);
 
   try {
     const getProjectByid = await getProjectsByidservice(
@@ -164,170 +163,194 @@ export const getProjectsByidcontroller = async (
   }
 };
 
+export const getEmpolyeesandthereworkloadforassigningProjectsController =
+  async (req: Request, res: Response) => {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+      return;
+    }
+    const { project_id } = req.params;
+    try {
+      const employeesWorkload =
+        await getEmpolyeesandthereworkloadforassigningProjects(
+          project_id as string,
+        );
+      res.status(200).json({
+        success: true,
+        message: "Successfully got the emloyees and there workload",
+        allemployeesWorkload: employeesWorkload,
+      });
+    } catch (error: any) {
+      console.log("Error Fetching employees and there workload", error);
+      res.status(500).json({
+        success: false,
+        message: "internal error",
+        error: error instanceof Error ? error.message : "unknown error",
+      });
+    }
+  };
 
-export const getEmpolyeesandthereworkloadforassigningProjectsController = async(req:Request , res:Response)=>{
-
-  if(!req.user){
+export const assignEmployeestoProjectController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
     res.status(401).json({
-      success:false,
-      message:"Unauthorized"
+      success: false,
+      message: "unauthorized",
     });
     return;
   }
-  const {project_id} = req.params ;
-  try {
-    const employeesWorkload = await getEmpolyeesandthereworkloadforassigningProjects(project_id as string);
-    res.status(200).json({
-      success:true,
-      message:"Successfully got the emloyees and there workload",
-      allemployeesWorkload : employeesWorkload
-    });
-    
-  } catch (error:any) {
-    console.log("Error Fetching employees and there workload",error);
-    res.status(500).json({
-      success:false,
-      message:"internal error",
-      error: error instanceof Error 
-      ? error.message
-      : "unknown error",
-    });
-  }  
-}
 
-export const assignEmployeestoProjectController = async (req:Request , res:Response)=>{
-
-  if(!req.user){
-    res.status(401).json({
-      success:false,
-      message:"unauthorized",
-    });
-    return;
-  }
-
-  const {project_id}  = req.params;
-  const {employee_ids} = req.body as UnAssignAndAssignEmployeesBody;
+  const { project_id } = req.params;
+  const { employee_ids } = req.body as UnAssignAndAssignEmployeesBody;
 
   try {
-    const assignedEmployeesDone = await assignEmployeestoProjectService(project_id as string,employee_ids);
+    const assignedEmployeesDone = await assignEmployeestoProjectService(
+      project_id as string,
+      employee_ids,
+    );
     res.status(200).json({
-      success:true,
-      message:"successfully assigned employees to project",
-      assignedEmployees : assignedEmployeesDone
+      success: true,
+      message: "successfully assigned employees to project",
+      assignedEmployees: assignedEmployeesDone,
     });
-  } catch (error:any) {
-    console.log("error assigning employees to project",error);
+  } catch (error: any) {
+    console.log("error assigning employees to project", error);
     res.status(500).json({
-      success:false,
-      error:error instanceof Error 
-      ? error.message
-      : "unknown error",
+      success: false,
+      error: error instanceof Error ? error.message : "unknown error",
     });
   }
 };
 
-export const unassignEmployeestoProjectController = async(req:Request , res:Response)=>{
-
-  if(!req.user){
-     res.status(401).json({
-      success:false,
-      message:"unauthorized",
-     })
-     return;
-  }
-
-
-  const {project_id} = req.params;
-  const {employee_ids} = req.body as UnAssignAndAssignEmployeesBody;
-
-  try {
-
-  const unassignedEmployeesDone = await unassignEmployeestoProjectService(project_id as string,employee_ids);
-  res.status(200).json({
-    success:true,
-    message:"successfully unassigned employees to project",
-    unassignEmployees:unassignedEmployeesDone
-  }); 
-  } catch (error:any) {
-    console.log("error unassigning employees to project",error);
-    res.status(500).json({
-      success:false,
-      error:error instanceof Error
-      ? error.message
-      : "unknown error"
-    });
-  }
-};
-
-export const getAssignedEmployeesofAprojectController = async(req:Request , res:Response)=>{
-
-  if(!req.user){
+export const unassignEmployeestoProjectController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
     res.status(401).json({
-      success:false,
-      message:"unauthorized",
-    })
+      success: false,
+      message: "unauthorized",
+    });
     return;
   }
 
-  const {project_id} = req.params;
+  const { project_id } = req.params;
+  const { employee_ids } = req.body as UnAssignAndAssignEmployeesBody;
+
   try {
-    const getAssignedEmp = await getAssignedEmployeesofAprojectService(project_id as string);
+    const unassignedEmployeesDone = await unassignEmployeestoProjectService(
+      project_id as string,
+      employee_ids,
+    );
     res.status(200).json({
-      success:true,
-      message:"successfully got the assigned employees",
-      AssignedEmp : getAssignedEmp,
+      success: true,
+      message: "successfully unassigned employees to project",
+      unassignEmployees: unassignedEmployeesDone,
     });
-  } catch (error:any) {
-    console.log("error getting the assigned employees for the project",error);
+  } catch (error: any) {
+    console.log("error unassigning employees to project", error);
     res.status(500).json({
-      success:false,
-      error: error instanceof Error
-      ? error.message
-      : "unknown error"
+      success: false,
+      error: error instanceof Error ? error.message : "unknown error",
     });
   }
 };
 
-
-
-export const projectStatusUpdateController = async(req:Request , res:Response)=>{
-  if(!req.user){
+export const getAssignedEmployeesofAprojectController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
     res.status(401).json({
-      success:false,
-      message:"unauthorized",
-    })
-    return
+      success: false,
+      message: "unauthorized",
+    });
+    return;
   }
-  const {project_id} = req.params;
-  const {status} = req.body;
+
+  const { project_id } = req.params;
+  try {
+    const getAssignedEmp = await getAssignedEmployeesofAprojectService(
+      project_id as string,
+    );
+    res.status(200).json({
+      success: true,
+      message: "successfully got the assigned employees",
+      AssignedEmp: getAssignedEmp,
+    });
+  } catch (error: any) {
+    console.log("error getting the assigned employees for the project", error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : "unknown error",
+    });
+  }
+};
+
+export const projectStatusUpdateController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: "unauthorized",
+    });
+    return;
+  }
+  const { project_id } = req.params;
+  const { status } = req.body;
   const user_role = req.user.role;
   const user_id = req.user.id;
 
   try {
-   const updateStatus = await projectStatusUpdateService(project_id as string,status as string,user_role as string,user_id as string);
-   res.status(200).json({
-    success:true,
-    message:"project status updated successfully",
-    updatedStatusdone : updateStatus
-   }); 
-  } catch (error:any) {
-    console.log("error updating the status of project",error);
-    
-    if(error.message === "unauthorized to access the project as you are not assigned"){
+    const updateStatus = await projectStatusUpdateService(
+      project_id as string,
+      status as string,
+      user_role as string,
+      user_id as string,
+    );
+    res.status(200).json({
+      success: true,
+      message: "project status updated successfully",
+      updatedStatusdone: updateStatus,
+    });
+  } catch (error: any) {
+    console.log("error updating the status of project", error);
+
+    if (
+      error.message ===
+      "unauthorized to access the project as you are not assigned"
+    ) {
       res.status(403).json({
-        success:false,
-        message:error.message
+        success: false,
+        message: error.message,
       });
       return;
     }
 
-    if(error.message ===)
+    if (error.message === "project not found") {
+      res.status(404).json({ success: false, message: error.message });
+      return;
+    }
+
+    if (
+      error.message ===
+      "project is already completed and status cannot be changed now"
+    ) {
+      res.status(400).json({ success: false, message: error.message });
+      return;
+    }
+
     res.status(500).json({
-     success : false,
-     message: "internal error",
-     error: error instanceof Error
-     ? error.message
-     : "unknown error"
-    })
+      success: false,
+      message: "internal error",
+      error: error instanceof Error ? error.message : "unknown error",
+    });
   }
-}
+};
