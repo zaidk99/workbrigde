@@ -305,13 +305,6 @@ export const projectStatusUpdateController = async(req:Request , res:Response)=>
 
   try {
    const updateStatus = await projectStatusUpdateService(project_id as string,status as string,user_role as string,user_id as string);
-    if (!updateStatus) {
-    res.status(404).json({
-      success: false,
-      message: "project not found"
-    });
-    return;
-  }
    res.status(200).json({
     success:true,
     message:"project status updated successfully",
@@ -327,7 +320,8 @@ export const projectStatusUpdateController = async(req:Request , res:Response)=>
       });
       return;
     }
-    
+
+    if(error.message ===)
     res.status(500).json({
      success : false,
      message: "internal error",
