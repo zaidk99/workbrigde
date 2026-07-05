@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS projects(
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- project files table 
+-- project files table  -- schema chages needed for project file uploads 
 CREATE TABLE IF NOT EXISTS project_files(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
