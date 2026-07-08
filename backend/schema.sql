@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS projects(
 
 -- project files table  -- schema chages needed for project file uploads 
 -- add of filelds --> uploaded_by , user_id are needed
+-- setting up of AWS AND IAM is needed for the files services to proceed
 CREATE TABLE IF NOT EXISTS project_files(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
