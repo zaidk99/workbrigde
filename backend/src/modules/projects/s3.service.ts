@@ -1,4 +1,9 @@
-import { DeleteObjectCommand, DeleteObjectCommandOutput, PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  DeleteObjectCommandOutput,
+  PutObjectCommand,
+  PutObjectCommandOutput,
+} from "@aws-sdk/client-s3";
 import s3client from "../../config/s3";
 import { BUCKET_NAME } from "../../config/s3";
 
@@ -12,8 +17,6 @@ interface UploadToS3Result {
   objectKey: string;
   response: PutObjectCommandOutput;
 }
-
-
 
 // Upload TO S3 buket function
 
@@ -36,15 +39,25 @@ export const uploadToS3Bucket = async ({
   };
 };
 
+
+// View Object From the Bucket
+
+export const viewFromS3Bucket = async ({
+    
+})
+
+
+
+
 // Delete Object from the S3 Bucket
 export const deleteFroms3Bucket = async ({
-    objectKey,
-}:InputForS3):Promise<DeleteObjectCommandOutput>=>{
-    const command = new DeleteObjectCommand({
-        Bucket:BUCKET_NAME,
-        Key:objectKey,
-    });
+  objectKey,
+}: InputForS3): Promise<DeleteObjectCommandOutput> => {
+  const command = new DeleteObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: objectKey,
+  });
 
-    const response = await s3client.send(command);
-    return response;
+  const response = await s3client.send(command);
+  return response;
 };
