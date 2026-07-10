@@ -13,6 +13,7 @@ interface UploadToS3Result {
   objectKey: string;
   response: PutObjectCommandOutput;
 }
+
 export const uploadProjectFile = async ({
   project_id,
   role,
@@ -59,6 +60,11 @@ export const uploadProjectFile = async ({
         if(!allowedType.includes(file.mimetype)){
             throw new Error(`${file.originalname} is not a supported file type.`);
         }
+    }
+
+
+    for(const file of files){
+        
     }
 
 
