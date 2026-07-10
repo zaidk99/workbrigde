@@ -51,15 +51,15 @@ export const uploadProjectFile = async ({
 
     const allowedType = "application/pdf";
     const maxSize = 10*1024*1024;
-
-
-
-
-
-
-
-
-
+    
+    for (const file of files){
+        if(file.size > maxSize){
+            throw new Error(`${file.originalname} exceeds the 10MB size limit`);
+        }
+        if(!allowedType.includes(file.mimetype)){
+            throw new Error(`${file.originalname} is not a supported file type.`);
+        }
+    }
 
 
   }
