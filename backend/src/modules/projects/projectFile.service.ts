@@ -72,7 +72,10 @@ export const uploadProjectFile = async ({
 
     for(const file of files){
         const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-        const response = await uploadToS3Bucket(objectKey,file.buffer,file.mimetype);
+        const result = await uploadToS3Bucket(objectKey,file.buffer,file.mimetype);
+        const key = result.objectKey;
+        const saveKeyToDb = await pool.query(`INSERT INTO project_files`)
+
     }
 
 
