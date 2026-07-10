@@ -32,7 +32,7 @@ export const uploadProjectFile = async ({
     throw new Error("project does not exist");
   }
 
-  if (role == "client") {
+    if (role == "client") {
     const checkProjectOwner = await pool.query(
       `
             SELECT * FROM projects WHERE id = $1 AND client_user_id = $2;`,
@@ -41,6 +41,28 @@ export const uploadProjectFile = async ({
 
     if (checkProjectOwner.rows.length === 0) {
       throw new Error("you are not authorized to upload to this project");
+    };
+
+    if (files.length === 0) {
+    throw new Error("Please upload at least one file to upload.");
     }
+
+    if(files.length > 10){
+        throw new Error("Reduce the number of files allowed limit is 10 only");
+    }
+
+    const allowedType = "application/pdf";
+    const maxSize = 10*1024*1024;
+
+    
+
+
+
+
+
+
+
+
+
   }
 };
