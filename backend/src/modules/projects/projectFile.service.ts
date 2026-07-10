@@ -1,5 +1,6 @@
 import { PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { pool } from "../../config/db";
+import multer = require("multer");
 
 interface uploadInput {
     project_id : string,
@@ -18,6 +19,8 @@ export const uploadProjectFile = async({
     original_file_name,
     role,
     user_id,
+    files,
+
 }:uploadInput):Promise<UploadToS3Result>=>{
     
     const checkProject = await pool.query(`
@@ -36,14 +39,10 @@ export const uploadProjectFile = async({
             throw new Error("you are not authorized to upload to this project");
         };
 
+
+
     
 
     }
-
-
-
-
-
-
 
 }
