@@ -1,12 +1,19 @@
 import { PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { pool } from "../../config/db";
 import multer = require("multer");
+import { uploadToS3Bucket } from "./s3.service";
 
 interface uploadInput {
   project_id: string;
   role: string;
   user_id: string;
   files: Express.Multer.File[];
+}
+
+interface InputForS3 {
+  objectKey: string;
+  body: Buffer;
+  contentType: string;
 }
 
 interface UploadToS3Result {
@@ -65,7 +72,7 @@ export const uploadProjectFile = async ({
 
     for(const file of files){
         const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-        
+        const response = await uploadToS3Bucket(objectKey as string,)
     }
 
 
