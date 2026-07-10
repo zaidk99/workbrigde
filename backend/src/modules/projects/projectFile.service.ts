@@ -64,6 +64,7 @@ export const uploadProjectFile = async ({
 
 
     for(const file of files){
+        const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
         
     }
 
