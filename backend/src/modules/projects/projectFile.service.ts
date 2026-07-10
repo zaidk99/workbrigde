@@ -4,7 +4,6 @@ import multer = require("multer");
 
 interface uploadInput {
   project_id: string;
-  original_file_name: string;
   role: string;
   user_id: string;
   files: Express.Multer.File[];
@@ -16,7 +15,6 @@ interface UploadToS3Result {
 }
 export const uploadProjectFile = async ({
   project_id,
-  original_file_name,
   role,
   user_id,
   files,
@@ -54,7 +52,7 @@ export const uploadProjectFile = async ({
     const allowedType = "application/pdf";
     const maxSize = 10*1024*1024;
 
-    
+
 
 
 
