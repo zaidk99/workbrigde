@@ -72,22 +72,36 @@ export const uploadProjectFile = async ({
         }
     }
    
-    
+    const uploadedFiles: UploadFileMetaData[] = [];
 
     for(const file of files){
         const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-        const result = await uploadToS3Bucket({
+        await uploadToS3Bucket({
             objectKey,
             body:file.buffer,
             contentType:file.mimetype
         });
-        const key = result.objectKey;
-
-        
+        uploadedFiles.push({
+            objectKey,
+            originalFileName:file.originalname,
+            mimeType:file.mimetype,
+            fileSize: file.size,
+        });
     }
 
-
-
+    for(const uploadedFile of uploadedFiles) {
+        await pool.query(
+            `INSERT INTO project_files (project_id , uploaded_by , original_file_name , object_key , mime_type , file_size) VALUES($1,$2,$3,$4,$5,$6)`,
+            [
+                project_id,
+                user_id,
+                uploadedFile.originalFileName,
+                uploadedFile.objectKey,
+                uploadedFile.mimeType,
+                uploadedFile.fileSize,
+            ]
+        );
+    }
 
   }
 };
