@@ -18,7 +18,6 @@ interface InputForS3 {
 
 interface UploadToS3Result {
   objectKey: string;
-  response: PutObjectCommandOutput;
 }
 
 interface S3ObjectKeyInput {
@@ -42,7 +41,6 @@ export const uploadToS3Bucket = async ({
 
   return {
     objectKey,
-    response,
   };
 };
 

@@ -16,17 +16,20 @@ interface InputForS3 {
   contentType: string;
 }
 
-interface UploadToS3Result {
-  objectKey: string;
-  response: PutObjectCommandOutput;
+interface UploadFileMetaData {
+    objectKey:string;
+    originalFileName: string;
+    mimeType:string;
+    fileSize: number;
 }
+
 
 export const uploadProjectFile = async ({
   project_id,
   role,
   user_id,
   files,
-}: uploadInput): Promise<UploadToS3Result> => {
+}: uploadInput) => {
   const checkProject = await pool.query(
     `
         SELECT * FROM projects WHERE id = $1;
@@ -68,15 +71,22 @@ export const uploadProjectFile = async ({
             throw new Error(`${file.originalname} is not a supported file type.`);
         }
     }
-
+   
+    
 
     for(const file of files){
         const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-        const result = await uploadToS3Bucket(objectKey,file.buffer,file.mimetype);
+        const result = await uploadToS3Bucket({
+            objectKey,
+            body:file.buffer,
+            contentType:file.mimetype
+        });
         const key = result.objectKey;
-        const saveKeyToDb = await pool.query(`INSERT INTO project_files`)
 
+        
     }
+
+
 
 
   }
