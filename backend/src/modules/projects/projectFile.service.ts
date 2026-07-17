@@ -1,5 +1,5 @@
-import { pool  } from "../../config/db";
-import multer = require("multer");
+import { pool } from "../../config/db";
+import multer from "multer";
 import { uploadToS3Bucket } from "./s3.service";
 
 interface uploadInput {
@@ -9,12 +9,6 @@ interface uploadInput {
   files: Express.Multer.File[];
 }
 
-interface InputForS3 {
-  objectKey: string;
-  body: Buffer;
-  contentType: string;
-}
-
 interface UploadFileMetaData {
   objectKey: string;
   originalFileName: string;
@@ -22,7 +16,7 @@ interface UploadFileMetaData {
   fileSize: number;
 }
 
-export const uploadProjectFile = async ({
+export const uploadProjectFileService = async ({
   project_id,
   role,
   user_id,
@@ -48,7 +42,6 @@ export const uploadProjectFile = async ({
       throw new Error("you are not authorized to upload to this project");
     }
   }
-
 
   if (files.length === 0) {
     throw new Error("Please upload at least one file to upload.");
@@ -83,47 +76,42 @@ export const uploadProjectFile = async ({
   const client = await pool.connect();
 
   try {
+    await client.query("BEGIN");
 
-    (await client.query('BEGIN');
-      for (const file of files) {
-    const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-    await uploadToS3Bucket({
-      objectKey,
-      body: file.buffer,
-      contentType: file.mimetype,
-    });
-    uploadedFiles.push({
-      objectKey,
-      originalFileName: file.originalname,
-      mimeType: file.mimetype,
-      fileSize: file.size,
-    });
-  }
+    for (const file of files) {
+      const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
+      await uploadToS3Bucket({
+        objectKey,
+        body: file.buffer,
+        contentType: file.mimetype,
+      });
+      uploadedFiles.push({
+        objectKey,
+        originalFileName: file.originalname,
+        mimeType: file.mimetype,
+        fileSize: file.size,
+      });
+    }
 
-  (await client).query('COMMIT');
+    for (const uploadedFile of uploadedFiles) {
+      await client.query(
+        `INSERT INTO project_files (project_id , uploaded_by , original_file_name , object_key , mime_type , file_size) VALUES($1,$2,$3,$4,$5,$6)`,
+        [
+          project_id,
+          user_id,
+          uploadedFile.originalFileName,
+          uploadedFile.objectKey,
+          uploadedFile.mimeType,
+          uploadedFile.fileSize,
+        ],
+      );
+    }
 
-
-    
+    await client.query("COMMIT");
   } catch (error) {
-    await client.query('ROLLBACK');
+    await client.query("ROLLBACK");
     throw error;
-  } finally{
+  } finally {
     client.release();
   }
-
-
-  for (const uploadedFile of uploadedFiles) {
-    await pool.query(
-      `INSERT INTO project_files (project_id , uploaded_by , original_file_name , object_key , mime_type , file_size) VALUES($1,$2,$3,$4,$5,$6)`,
-      [
-        project_id,
-        user_id,
-        uploadedFile.originalFileName,
-        uploadedFile.objectKey,
-        uploadedFile.mimeType,
-        uploadedFile.fileSize,
-      ],
-    );
-  }
-
 };
