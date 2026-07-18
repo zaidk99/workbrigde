@@ -1,6 +1,6 @@
 import { pool } from "../../config/db";
 import multer from "multer";
-import { uploadToS3Bucket } from "./s3.service";
+import { deleteFroms3Bucket, uploadToS3Bucket } from "./s3.service";
 
 interface uploadInput {
   project_id: string;
@@ -73,25 +73,28 @@ export const uploadProjectFileService = async ({
   }
 
   const uploadedFiles: UploadFileMetaData[] = [];
+
+  for (const file of files) {
+    const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
+    await uploadToS3Bucket({
+      objectKey,
+      body: file.buffer,
+      contentType: file.mimetype,
+    });
+    uploadedFiles.push({
+      objectKey,
+      originalFileName: file.originalname,
+      mimeType: file.mimetype,
+      fileSize: file.size,
+    });
+  }
+
+  
+
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
-
-    for (const file of files) {
-      const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-      await uploadToS3Bucket({
-        objectKey,
-        body: file.buffer,
-        contentType: file.mimetype,
-      });
-      uploadedFiles.push({
-        objectKey,
-        originalFileName: file.originalname,
-        mimeType: file.mimetype,
-        fileSize: file.size,
-      });
-    }
 
     for (const uploadedFile of uploadedFiles) {
       await client.query(
@@ -110,6 +113,10 @@ export const uploadProjectFileService = async ({
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
+    for (const uploadedFile of uploadedFiles) {
+      await deleteFroms3Bucket({ objectKey: uploadedFile.objectKey });
+    }
+
     throw error;
   } finally {
     client.release();
