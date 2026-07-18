@@ -74,22 +74,27 @@ export const uploadProjectFileService = async ({
 
   const uploadedFiles: UploadFileMetaData[] = [];
 
-  for (const file of files) {
-    const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
-    await uploadToS3Bucket({
-      objectKey,
-      body: file.buffer,
-      contentType: file.mimetype,
-    });
-    uploadedFiles.push({
-      objectKey,
-      originalFileName: file.originalname,
-      mimeType: file.mimetype,
-      fileSize: file.size,
-    });
+  try {
+    for (const file of files) {
+      const objectKey = `projects/${project_id}/${Date.now()}-${file.originalname}`;
+      await uploadToS3Bucket({
+        objectKey,
+        body: file.buffer,
+        contentType: file.mimetype,
+      });
+      uploadedFiles.push({
+        objectKey,
+        originalFileName: file.originalname,
+        mimeType: file.mimetype,
+        fileSize: file.size,
+      });
+    }
+  } catch (error) {
+    for (const uploadFile of uploadedFiles) {
+      await deleteFroms3Bucket({ objectKey: uploadFile.objectKey });
+    }
+    throw error;
   }
-
-  
 
   const client = await pool.connect();
 
