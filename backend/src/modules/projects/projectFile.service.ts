@@ -116,12 +116,12 @@ export const uploadProjectFileService = async ({
     }
 
     await client.query("COMMIT");
+
   } catch (error) {
     await client.query("ROLLBACK");
     for (const uploadedFile of uploadedFiles) {
       await deleteFroms3Bucket({ objectKey: uploadedFile.objectKey });
     }
-
     throw error;
   } finally {
     client.release();

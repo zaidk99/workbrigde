@@ -1,4 +1,5 @@
 import { Response , Request } from "express";
+import { uploadProjectFileService } from "./projectFile.service";
 
 
 export const uploadProjectFileController = async (res:Response , req:Request )=>{
@@ -10,9 +11,9 @@ export const uploadProjectFileController = async (res:Response , req:Request )=>
         return;
     }
 
-    const user_role = req.user.role;
+    const role = req.user.role;
     const user_id = req.user.id;
-    const {project_id} = req.params;
+    const { project_id } = req.params as { project_id: string };
     const files = req.files as Express.Multer.File[];
 
     if(!files || files.length === 0){
@@ -23,7 +24,7 @@ export const uploadProjectFileController = async (res:Response , req:Request )=>
         return;
     }
 
-    await 
+    await uploadProjectFileService({project_id, role , user_id , files})
     
   
 }
