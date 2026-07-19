@@ -117,7 +117,7 @@ export const uploadProjectFileService = async ({
     }
 
     await client.query("COMMIT");
-
+    return insertedFiles;
   } catch (error) {
     await client.query("ROLLBACK");
     for (const uploadedFile of uploadedFiles) {
