@@ -2,8 +2,8 @@ import { Response, Request } from "express";
 import { uploadProjectFileService } from "./projectFile.service";
 
 export const uploadProjectFileController = async (
-    req:Request,
-    res:Response
+  req: Request,
+  res: Response,
 ) => {
   if (!req.user) {
     res.status(401).json({
@@ -32,35 +32,37 @@ export const uploadProjectFileController = async (
       success: true,
       message: "files uploaded successfully",
     });
-  } catch (error:any) {
-    if(error.message === "project does not exist"){
-        res.status(404).json({
-            success:false,
-            message:error.message,
-        });
-        return;
+  } catch (error: any) {
+    if (error.message === "project does not exist") {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+      return;
     }
-    if(error.message === "you are not authorized to upload to this project"){
-        res.status(403).json({
-            success:false,
-            message:error.message,
-        });
-        return;
+    if (error.message === "you are not authorized to upload to this project") {
+      res.status(403).json({
+        success: false,
+        message: error.message,
+      });
+      return;
     }
 
-    if(error.message === "Please upload at least one file to upload." || error.message==="Reduce the number of files allowed limit is 10 only" || error.message.includes("exceeds the 20MB size limit") || error.message.includes("is not a supported file type.")){
-        res.status(400).json({
-            success:false,
-            message:error.message,
-        });
-        return;
-    };
-
+    if (
+      error.message === "Please upload at least one file to upload." ||
+      error.message === "Reduce the number of files allowed limit is 10 only" ||
+      error.message.includes("exceeds the 20MB size limit") ||
+      error.message.includes("is not a supported file type.")
+    ) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+      return;
+    }
     res.status(500).json({
-        success:false,
-        message:error instanceof Error
-        ? error.message
-        : "unknown error"
+      success: false,
+      message: error instanceof Error ? error.message : "unknown error",
     });
   }
 };
