@@ -100,9 +100,9 @@ export const uploadProjectFileService = async ({
 
   try {
     await client.query("BEGIN");
-
+    const insertedFiles = [];
     for (const uploadedFile of uploadedFiles) {
-      await client.query(
+      const result = await client.query(
         `INSERT INTO project_files (project_id , uploaded_by , original_file_name , object_key , mime_type , file_size) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,
         [
           project_id,
@@ -113,6 +113,7 @@ export const uploadProjectFileService = async ({
           uploadedFile.fileSize,
         ],
       );
+      insertedFiles.push(result.rows[0]);
     }
 
     await client.query("COMMIT");
