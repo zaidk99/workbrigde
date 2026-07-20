@@ -28,7 +28,8 @@ export const uploadProjectFileController = async (
 
   try {
     await uploadProjectFileService({ project_id, role, user_id, files });
-    res.status(200).json({
+    // new resource is getting created
+    res.status(201).json({ 
       success: true,
       message: "files uploaded successfully",
     });
