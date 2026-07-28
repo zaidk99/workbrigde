@@ -11,6 +11,4 @@ export const usePasswordCompare = async (userPassword:string  , hashedPassword:s
 };
 
 
-// userPasswordHash("password123").then(hash=>{
-//     console.log(hash);
-// });
+
