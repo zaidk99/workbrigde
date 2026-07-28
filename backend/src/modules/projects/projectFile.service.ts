@@ -136,7 +136,8 @@ export const getUploadedFiles = async (
   role:string,
 ) => {
 
-  const checkProject = await pool.query(`SELECT * FROM projectFilse`)
+  const checkProject = await pool.query(`SELECT * FROM project_files WHERE project_id = $1`,[project_id]);
+  
   
 
 }
