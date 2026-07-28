@@ -131,12 +131,12 @@ export const uploadProjectFileService = async ({
 
 
 export const getUploadedFiles = async (
-  project_id,
-  user_id,
-)=>{
+  project_id:string,
+  user_id:string,
+  role:string,
+) => {
 
-  // checking of several things and then return the 
-  // files and the meta data
-
+  const checkProject = await pool.query(`SELECT * FROM projectFilse`)
+  
 
 }
