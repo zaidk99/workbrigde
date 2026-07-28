@@ -60,6 +60,8 @@ Desktop.ini
 *.sublime-workspace
 *.sublime-project
 
+notesonly.txt
+
 # Ignore by pattern
 *secret*
 *privateKey*
