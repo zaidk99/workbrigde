@@ -137,7 +137,15 @@ export const getUploadedFiles = async (
 ) => {
 
   const checkProject = await pool.query(`SELECT * FROM project_files WHERE project_id = $1`,[project_id]);
-  
+
+  if(checkProject.rows.length === 0){
+    throw new Error("project not found");
+  }
+
+  if(role==='client'){
+    // checking if the client owns the project id or not 
+  }
+
   
 
 }
