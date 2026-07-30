@@ -145,7 +145,7 @@ export const getUploadedFiles = async (
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,[project_id,user_id]
   );
   const checkForprojectBelongsToEmployee = await pool.query(
-    `SELECT * FROM project_employees WHERE project_id = $1 AND employee`
+    `SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,[project_id,user_id]
   );
   
   if(role==='client'){
@@ -161,9 +161,9 @@ export const getUploadedFiles = async (
     }
   };
 
+  const getFilesmetData = await pool.query(`
+     SELECT * FROM project_files WHERE project_id = $1`,[project_id]
+  );
   
 
-
-  
-
-}j
+};
