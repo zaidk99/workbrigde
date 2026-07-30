@@ -145,15 +145,24 @@ export const getUploadedFiles = async (
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,[project_id,user_id]
   );
   const checkForprojectBelongsToEmployee = await pool.query(
-    `SELECT * FROM project_employees WHERE project_id = $1 AND `
-  )
+    `SELECT * FROM project_employees WHERE project_id = $1 AND employee`
+  );
   
   if(role==='client'){
     // checking if the client owns the project id or not
     if(checkifProjectBelongstoClient.rows.length === 0){
-      throw new Error("this project does not belong to you ")
+      throw new Error("this project does not belong to you ");
     }
-  }
+  };
+
+  if(role==='employee'){
+    if(checkForprojectBelongsToEmployee.rows.length === 0){
+      throw new Error("this project is not assigned to you");
+    }
+  };
+
+  
+
 
   
 
