@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { uploadProjectFileService } from "./projectFile.service";
+import { getUploadedFilesService, uploadProjectFileService } from "./projectFile.service";
 
 export const uploadProjectFileController = async (
   req: Request,
@@ -69,6 +69,7 @@ export const uploadProjectFileController = async (
 };
 
 export const getUploadedFilesController = async (req:Request,res:Response)=>{
+
   if(!req.user){
     res.status(401).json({
       success:false,
@@ -81,8 +82,15 @@ export const getUploadedFilesController = async (req:Request,res:Response)=>{
   const user_role = req.user.role;
   const user_id = req.user.id;
 
+  try {
+    const getFiles = await getUploadedFilesService(project_id,user_id,user_role);
+    
+    
+  } catch (error:any) {
+    
+  }
 
-  
+
 
 
 
