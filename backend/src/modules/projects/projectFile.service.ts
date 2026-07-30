@@ -141,7 +141,7 @@ export const uploadProjectFileService = async ({
   }
 };
 
-export const getUploadedFiles = async (
+export const getUploadedFilesService = async (
   project_id: string,
   user_id: string,
   role: string,

@@ -67,3 +67,26 @@ export const uploadProjectFileController = async (
     });
   }
 };
+
+export const getUploadedFilesController = async (req:Request,res:Response)=>{
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      messge:"unauthorized"
+    })
+    return;
+  }
+
+  const project_id = req.params.project_id as string;
+  const user_role = req.user.role;
+  const user_id = req.user.id;
+
+
+  
+
+
+
+
+
+
+}
