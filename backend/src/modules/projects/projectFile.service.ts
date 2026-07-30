@@ -16,6 +16,18 @@ interface UploadFileMetaData {
   fileSize: number;
 }
 
+interface ProjectFile {
+  id:string;
+  project_id:string;
+  uploaded_by:string;
+  orginal_file_name:string;
+  object_key:string;
+  mime_type:string;
+  files_size:number;
+  created_at:Date;
+  updated_at:Date;
+}
+
 export const uploadProjectFileService = async ({
   project_id,
   role,
@@ -133,9 +145,9 @@ export const getUploadedFiles = async (
   project_id: string,
   user_id: string,
   role: string,
-) => {
+):Promise<ProjectFile[]>=> {
   const checkProject = await pool.query(
-    `SELECT * FROM projects WHERE project_id = $1`,
+    `SELECT * FROM projects WHERE id = $1`,
     [project_id],
   );
 
@@ -165,8 +177,7 @@ export const getUploadedFiles = async (
   }
 
   const getFiles = await pool.query(
-    `
-     SELECT * FROM project_files WHERE project_id = $1`,
+    ` SELECT * FROM project_files WHERE project_id = $1`,
     [project_id],
   );
 
