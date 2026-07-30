@@ -141,11 +141,20 @@ export const getUploadedFiles = async (
   if(checkProject.rows.length === 0){
     throw new Error("project not found");
   }
-
+  const checkifProjectBelongstoClient = await pool.query(
+      `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,[project_id,user_id]
+  );
+  const checkForprojectBelongsToEmployee = await pool.query(
+    `SELECT * FROM project_employees WHERE project_id = $1 AND `
+  )
+  
   if(role==='client'){
-    // checking if the client owns the project id or not 
+    // checking if the client owns the project id or not
+    if(checkifProjectBelongstoClient.rows.length === 0){
+      throw new Error("this project does not belong to you ")
+    }
   }
 
   
 
-}
+}j
