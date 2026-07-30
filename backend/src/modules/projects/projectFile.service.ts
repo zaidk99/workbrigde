@@ -129,41 +129,46 @@ export const uploadProjectFileService = async ({
   }
 };
 
-
 export const getUploadedFiles = async (
-  project_id:string,
-  user_id:string,
-  role:string,
+  project_id: string,
+  user_id: string,
+  role: string,
 ) => {
+  const checkProject = await pool.query(
+    `SELECT * FROM projects WHERE project_id = $1`,
+    [project_id],
+  );
 
-  const checkProject = await pool.query(`SELECT * FROM project_files WHERE project_id = $1`,[project_id]);
-
-  if(checkProject.rows.length === 0){
+  if (checkProject.rows.length === 0) {
     throw new Error("project not found");
   }
-  const checkifProjectBelongstoClient = await pool.query(
-      `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,[project_id,user_id]
-  );
-  const checkForprojectBelongsToEmployee = await pool.query(
-    `SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,[project_id,user_id]
-  );
-  
-  if(role==='client'){
+
+  if (role === "client") {
     // checking if the client owns the project id or not
-    if(checkifProjectBelongstoClient.rows.length === 0){
+    const checkifProjectBelongstoClient = await pool.query(
+      `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,
+      [project_id, user_id],
+    );
+    if (checkifProjectBelongstoClient.rows.length === 0) {
       throw new Error("this project does not belong to you ");
     }
-  };
+  }
 
-  if(role==='employee'){
-    if(checkForprojectBelongsToEmployee.rows.length === 0){
+  if (role === "employee") {
+    const checkForprojectBelongsToEmployee = await pool.query(
+      `SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,
+      [project_id, user_id],
+    );
+    if (checkForprojectBelongsToEmployee.rows.length === 0) {
       throw new Error("this project is not assigned to you");
     }
-  };
+  }
 
-  const getFilesmetData = await pool.query(`
-     SELECT * FROM project_files WHERE project_id = $1`,[project_id]
+  const getFiles = await pool.query(
+    `
+     SELECT * FROM project_files WHERE project_id = $1`,
+    [project_id],
   );
-  
 
+  return getFiles.rows;
 };
