@@ -1,5 +1,8 @@
 import { Response, Request } from "express";
-import { getUploadedFilesService, uploadProjectFileService } from "./projectFile.service";
+import {
+  getUploadedFilesService,
+  uploadProjectFileService,
+} from "./projectFile.service";
 
 export const uploadProjectFileController = async (
   req: Request,
@@ -29,7 +32,7 @@ export const uploadProjectFileController = async (
   try {
     await uploadProjectFileService({ project_id, role, user_id, files });
     // new resource is getting created
-    res.status(201).json({ 
+    res.status(201).json({
       success: true,
       message: "files uploaded successfully",
     });
@@ -68,13 +71,15 @@ export const uploadProjectFileController = async (
   }
 };
 
-export const getUploadedFilesController = async (req:Request,res:Response)=>{
-
-  if(!req.user){
+export const getUploadedFilesController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
     res.status(401).json({
-      success:false,
-      messge:"unauthorized"
-    })
+      success: false,
+      message: "unauthorized",
+    });
     return;
   }
 
@@ -83,44 +88,36 @@ export const getUploadedFilesController = async (req:Request,res:Response)=>{
   const user_id = req.user.id;
 
   try {
-    const result = await getUploadedFilesService(project_id,user_id,user_role);
+    const result = await getUploadedFilesService(
+      project_id,
+      user_id,
+      user_role,
+    );
     res.status(200).json({
-      success:true,
-      message:"successfully got the files ",
-      getFiles:result
-    });    
-  } catch (error:any) {
-
-    if(error.message === "project not found"){
-       res.status(404).json({
-        success:false,
-        message:error.message,
-       });
-       return;
+      success: true,
+      message: "successfully got the files ",
+      getFiles: result,
+    });
+  } catch (error: any) {
+    if (error.message === "project not found") {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+      return;
     }
 
-    if(error.message === "this project does not belong to you" ){
+    if (error.message === "this project does not belong to you") {
       res.status(403).json({
-        success:false,
-        message:error.message,
+        success: false,
+        message: error.message,
       });
       return;
     }
 
     res.status(500).json({
-      success:false,
-      message:error instanceof Error
-      ? error.message 
-      : "unknown error",
+      success: false,
+      message: error instanceof Error ? error.message : "unknown error",
     });
-
   }
-
-
-
-
-
-
-
-
-}
+};
