@@ -12,10 +12,13 @@ import {
   projectStatusUpdateController,
   unassignEmployeestoProjectController,
 } from "./project.controller";
-import { getUploadedFilesController, uploadProjectFileController } from "./projectFile.controller";
+import {
+  getUploadedFilesController,
+  uploadProjectFileController,
+} from "./projectFile.controller";
 import multer from "multer";
 
-const upload = multer({storage:multer.memoryStorage()});
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
@@ -37,12 +40,14 @@ router.get(
   authorizeRoles("employee"),
   getallassignedprojectsbyemployeeController,
 );
+
 router.get(
   "/:project_id/employeesandworkload",
   authenticate,
   authorizeRoles("admin"),
   getEmpolyeesandthereworkloadforassigningProjectsController,
 );
+
 router.get(
   "/:project_id/employees",
   authenticate,
@@ -50,10 +55,11 @@ router.get(
   getAssignedEmployeesofAprojectController,
 );
 
+// api to get the files
 router.get(
   "/:project_id/files",
   authenticate,
-  authorizeRoles('admin','client','employee'),
+  authorizeRoles("admin", "client", "employee"),
   getUploadedFilesController,
 );
 
@@ -81,7 +87,7 @@ router.post(
   "/:project_id/upload-project-files",
   authenticate,
   authorizeRoles("admin", "client"),
-  upload.array("files",10),
+  upload.array("files", 10),
   uploadProjectFileController,
 );
 router.get(
