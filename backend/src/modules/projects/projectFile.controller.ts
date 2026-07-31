@@ -83,10 +83,15 @@ export const getUploadedFilesController = async (req:Request,res:Response)=>{
   const user_id = req.user.id;
 
   try {
-    const getFiles = await getUploadedFilesService(project_id,user_id,user_role);
-    
-    
+    const result = await getUploadedFilesService(project_id,user_id,user_role);
+    res.status(200).json({
+      success:true,
+      message:"successfully got the files ",
+      getFiles:result
+    });    
   } catch (error:any) {
+
+    
     
   }
 
