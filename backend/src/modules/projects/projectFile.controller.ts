@@ -91,7 +91,24 @@ export const getUploadedFilesController = async (req:Request,res:Response)=>{
     });    
   } catch (error:any) {
 
+    if(error.message === "project not found"){
+       res.status(404).json({
+        success:false,
+        message:error.message,
+       });
+       return;
+    }
+
+    if(error.message === "this project does not belong to you" ){
+      res.status(403).json({
+        success:false,
+        message:error.message,
+      });
+      return;
+    }
+
     
+
     
   }
 

@@ -162,7 +162,7 @@ export const getUploadedFilesService = async (
       [project_id, user_id],
     );
     if (checkifProjectBelongstoClient.rows.length === 0) {
-      throw new Error("this project does not belong to you ");
+      throw new Error("this project does not belong to you");
     }
   }
 
@@ -172,7 +172,7 @@ export const getUploadedFilesService = async (
       [project_id, user_id],
     );
     if (checkForprojectBelongsToEmployee.rows.length === 0) {
-      throw new Error("this project is not assigned to you");
+      throw new Error("this project does not belong to you");
     }
   }
 
