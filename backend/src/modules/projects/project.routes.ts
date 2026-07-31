@@ -90,6 +90,7 @@ router.post(
   upload.array("files", 10),
   uploadProjectFileController,
 );
+
 router.get(
   "/:project_id",
   authenticate,
