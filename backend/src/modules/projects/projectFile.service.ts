@@ -177,7 +177,7 @@ export const getUploadedFilesService = async (
   }
 
   const getFiles = await pool.query(
-    ` SELECT * FROM project_files WHERE project_id = $1`,
+    ` SELECT *, file_size::int AS file_size FROM project_files WHERE project_id = $1`,
     [project_id],
   );
 
