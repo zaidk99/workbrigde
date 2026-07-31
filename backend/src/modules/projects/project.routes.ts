@@ -12,7 +12,7 @@ import {
   projectStatusUpdateController,
   unassignEmployeestoProjectController,
 } from "./project.controller";
-import { uploadProjectFileController } from "./projectFile.controller";
+import { getUploadedFilesController, uploadProjectFileController } from "./projectFile.controller";
 import multer from "multer";
 
 const upload = multer({storage:multer.memoryStorage()});
@@ -48,6 +48,13 @@ router.get(
   authenticate,
   authorizeRoles("admin"),
   getAssignedEmployeesofAprojectController,
+);
+
+router.get(
+  "/:project_id/files",
+  authenticate,
+  authorizeRoles('admin','client','employee'),
+  getUploadedFilesController,
 );
 
 // api to assign employees admin only
