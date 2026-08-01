@@ -184,4 +184,6 @@ export const getUploadedFilesService = async (
   return getFiles.rows;
 };
 
-
+export const getPresignedUrlforFilesService = async()=>{
+  
+}
