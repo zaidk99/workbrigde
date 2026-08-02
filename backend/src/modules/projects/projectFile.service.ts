@@ -17,25 +17,23 @@ interface UploadFileMetaData {
 }
 
 interface ProjectFile {
-  id:string;
-  project_id:string;
-  uploaded_by:string;
-  orginal_file_name:string;
-  object_key:string;
-  mime_type:string;
-  files_size:number;
-  created_at:Date;
-  updated_at:Date;
+  id: string;
+  project_id: string;
+  uploaded_by: string;
+  orginal_file_name: string;
+  object_key: string;
+  mime_type: string;
+  files_size: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface inputsForPresignedUrl {
-  project_id:string;
-  file_id:string;
-  user_id:string;
-  user_role:string;
+  project_id: string;
+  file_id: string;
+  user_id: string;
+  user_role: string;
 }
-
-
 
 export const uploadProjectFileService = async ({
   project_id,
@@ -154,7 +152,7 @@ export const getUploadedFilesService = async (
   project_id: string,
   user_id: string,
   role: string,
-):Promise<ProjectFile[]>=> {
+): Promise<ProjectFile[]> => {
   const checkProject = await pool.query(
     `SELECT * FROM projects WHERE id = $1`,
     [project_id],
@@ -193,14 +191,31 @@ export const getUploadedFilesService = async (
   return getFiles.rows;
 };
 
-export const getPresignedUrlforFilesService = async(project_id:string,file_id:string,user_id:string,user_role:string):Promise<string>=>{
-   const checkProject = await pool.query(`SELECT * FROM project_files WHERE project_id = $1`,[project_id]);
+export const getPresignedUrlforFilesService = async (
+  project_id: string,
+  file_id: string,
+  user_id: string,
+  user_role: string,
+): Promise<string> => {
 
-   if(checkProject.rows.length != 0){
-      const checkFileBelongsTothisProject = await pool.query(`SELECT * FROM `)
-   } 
-   
-   if (user_role === "client") {
+  const checkProject = await pool.query(
+    `SELECT id FROM projects WHERE project_id = $1`,
+    [project_id],
+  );
+
+  if (checkProject.rows.length != 0) {
+    const checkFileBelongsTothisProject = await pool.query(
+      `SELECT * FROM project_files WHERE id=$1 AND project_id = $2 `,
+      [file_id, project_id],
+    );
+    if (checkFileBelongsTothisProject.rows.length === 0) {
+      throw new Error("this file does not belong to this project");
+    }
+  } else {
+    throw new Error("project does not exist");
+  }
+
+  if (user_role === "client") {
     // checking if the client owns the project id or not
     const checkifProjectBelongstoClient = await pool.query(
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,
@@ -210,7 +225,6 @@ export const getPresignedUrlforFilesService = async(project_id:string,file_id:st
       throw new Error("this project does not belong to you");
     }
   }
-
   if (user_role === "employee") {
     const checkForprojectBelongsToEmployee = await pool.query(
       `SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,
@@ -220,6 +234,4 @@ export const getPresignedUrlforFilesService = async(project_id:string,file_id:st
       throw new Error("this project does not belong to you");
     }
   }
-
-
-}
+};
