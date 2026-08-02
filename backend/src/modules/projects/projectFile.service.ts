@@ -28,6 +28,15 @@ interface ProjectFile {
   updated_at:Date;
 }
 
+interface inputsForPresignedUrl {
+  project_id:string;
+  file_id:string;
+  user_id:string;
+  user_role:string;
+}
+
+
+
 export const uploadProjectFileService = async ({
   project_id,
   role,
@@ -184,6 +193,6 @@ export const getUploadedFilesService = async (
   return getFiles.rows;
 };
 
-export const getPresignedUrlforFilesService = async()=>{
-  
+export const getPresignedUrlforFilesService = async(project_id,file_id,user_id,user_role):Promise<string>=>{
+
 }
