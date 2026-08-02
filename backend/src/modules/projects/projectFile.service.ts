@@ -195,10 +195,12 @@ export const getUploadedFilesService = async (
 
 export const getPresignedUrlforFilesService = async(project_id:string,file_id:string,user_id:string,user_role:string):Promise<string>=>{
    const checkProject = await pool.query(`SELECT * FROM project_files WHERE project_id = $1`,[project_id]);
-   if(checkProject.rows.length === 0){
-    throw new Error("project does not exist");
-   }
-   if (role === "client") {
+
+   if(checkProject.rows.length != 0){
+      const checkFileBelongsTothisProject = await pool.query(`SELECT * FROM `)
+   } 
+   
+   if (user_role === "client") {
     // checking if the client owns the project id or not
     const checkifProjectBelongstoClient = await pool.query(
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2`,
@@ -209,7 +211,7 @@ export const getPresignedUrlforFilesService = async(project_id:string,file_id:st
     }
   }
 
-  if (role === "employee") {
+  if (user_role === "employee") {
     const checkForprojectBelongsToEmployee = await pool.query(
       `SELECT * FROM project_employees WHERE project_id = $1 AND employee_id = $2`,
       [project_id, user_id],
@@ -218,5 +220,6 @@ export const getPresignedUrlforFilesService = async(project_id:string,file_id:st
       throw new Error("this project does not belong to you");
     }
   }
+
 
 }
