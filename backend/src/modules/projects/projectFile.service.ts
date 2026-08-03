@@ -243,3 +243,13 @@ export const getPresignedUrlforFilesService = async (
   const viewFileUrl = await viewFromS3Bucket({objectKey});
   return viewFileUrl;
 };
+
+export const deleteFileFromS3Service = async(
+project_id:string,
+user_id:string,
+user_role:string,
+file_id:string,
+):Promise<void>=>{
+  
+
+}
