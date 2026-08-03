@@ -123,13 +123,15 @@ export const getUploadedFilesController = async (
   }
 };
 
-
-export const getPresignedUrlforFilesController = async(req:Request, res:Response)=>{
-  if(!req.user){
+export const getPresignedUrlforFilesController = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.user) {
     res.status(401).json({
-      success:false,
-      message:"unauthorized",
-    })
+      success: false,
+      message: "unauthorized",
+    });
     return;
   }
 
@@ -139,46 +141,48 @@ export const getPresignedUrlforFilesController = async(req:Request, res:Response
   const user_role = req.user.role;
 
   try {
-    const getviewUrl = await getPresignedUrlforFilesService(project_id,file_id,user_id,user_role);
+    const getviewUrl = await getPresignedUrlforFilesService(
+      project_id,
+      file_id,
+      user_id,
+      user_role,
+    );
     res.status(200).json({
-      success:true,
-      message:"successfully got presigned url for the file",
-      viewUrl:getviewUrl,
+      success: true,
+      message: "successfully got presigned url for the file",
+      viewUrl: getviewUrl,
     });
-  } catch (error:any) {
-
-    if(error.message === "project does not exist" || "this file does not belong to this project"){
+  } catch (error: any) {
+    if (
+      error.message === "project does not exist" ||
+      "this file does not belong to this project"
+    ) {
       res.status(404).json({
-        success:false,
-        message:error.message,
-      })
+        success: false,
+        message: error.message,
+      });
       return;
     }
 
-    if(error.message === "this project does not belong to you"){
+    if (error.message === "this project does not belong to you") {
       res.status(403).json({
-        success:false,
-        message:error.message,
-      })
+        success: false,
+        message: error.message,
+      });
       return;
     }
 
-    if(error.message === "file not found"){
+    if (error.message === "file not found") {
       res.status(404).json({
-        success:false,
-        message:error.message,
-      })
+        success: false,
+        message: error.message,
+      });
       return;
     }
 
     res.status(500).json({
-      success:false,
-      message:error instanceof Error 
-      ? error.message
-      : "unknown error"
-
-    })
-
-    
+      success: false,
+      message: error instanceof Error ? error.message : "unknown error",
+    });
   }
-}
+};
