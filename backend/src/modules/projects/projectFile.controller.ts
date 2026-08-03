@@ -155,7 +155,8 @@ export const getPresignedUrlforFilesController = async (
   } catch (error: any) {
     if (
       error.message === "project does not exist" ||
-      "this file does not belong to this project"
+      error.message === "this file does not belong to this project"||
+      error.message === "file not found"
     ) {
       res.status(404).json({
         success: false,
@@ -172,17 +173,10 @@ export const getPresignedUrlforFilesController = async (
       return;
     }
 
-    if (error.message === "file not found") {
-      res.status(404).json({
-        success: false,
-        message: error.message,
-      });
-      return;
-    }
-
     res.status(500).json({
       success: false,
       message: error instanceof Error ? error.message : "unknown error",
     });
+    return;
   }
 };
