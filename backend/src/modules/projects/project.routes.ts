@@ -13,6 +13,7 @@ import {
   unassignEmployeestoProjectController,
 } from "./project.controller";
 import {
+  getPresignedUrlforFilesController,
   getUploadedFilesController,
   uploadProjectFileController,
 } from "./projectFile.controller";
@@ -61,6 +62,13 @@ router.get(
   authenticate,
   authorizeRoles("admin", "client", "employee"),
   getUploadedFilesController,
+);
+// api to get presigned urls for the files to view
+router.get(
+  "/:project_id/files/:file_id/url",
+  authenticate,
+  authorizeRoles('admin','client','employee'),
+  getPresignedUrlforFilesController,
 );
 
 // api to assign employees admin only
