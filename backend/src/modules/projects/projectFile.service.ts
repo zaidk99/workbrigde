@@ -51,7 +51,7 @@ export const uploadProjectFileService = async ({
   if (checkProject.rows.length === 0) {
     throw new Error("project does not exist");
   }
-
+ 
   if (role == "client") {
     const checkProjectOwner = await pool.query(
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2;`,

@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import {
+  getPresignedUrlforFilesService,
   getUploadedFilesService,
   uploadProjectFileService,
 } from "./projectFile.service";
@@ -121,3 +122,31 @@ export const getUploadedFilesController = async (
     });
   }
 };
+
+
+export const getPresignedUrlforFilesController = async(req:Request, res:Response)=>{
+  if(!req.user){
+    res.status(401).json({
+      success:false,
+      message:"unauthorized",
+    })
+    return;
+  }
+
+  const project_id = req.params.project_id as string;
+  const file_id = req.params.file_id as string;
+  const user_id = req.user.id;
+  const user_role = req.user.role;
+
+  try {
+    const getviewUrl = await getPresignedUrlforFilesService(project_id,file_id,user_id,user_role);
+    res.status(200).json({
+      success:true,
+      message:"successfully got presigned url for the file",
+      viewUrl:getviewUrl,
+    });
+  } catch (error:any) {
+
+    
+  }
+}
