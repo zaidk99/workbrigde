@@ -255,7 +255,24 @@ file_id:string,
      throw new Error("you are not authorized to delete");
   }
 
-  
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    await client.query(`DELETE FROM project_files WHERE id = $1`,[file_id]);
+    await client.query('COMMIT');
+
+    // DB DELETE IS SUCCESSFUL MOVING TO s3 delete
+
+    try {
+      await deleteFileFromS3Service({object_key})
+    } catch (error) {
+      
+    }
+    
+  } 
+
+
 
 
 }
