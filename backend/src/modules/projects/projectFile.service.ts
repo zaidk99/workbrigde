@@ -250,6 +250,12 @@ user_id:string,
 user_role:string,
 file_id:string,
 ):Promise<void>=>{
+
+  if(user_role != 'admin'){
+     throw new Error("you are not authorized to delete");
+  }
+
   
+
 
 }
