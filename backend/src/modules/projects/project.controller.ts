@@ -354,3 +354,8 @@ export const projectStatusUpdateController = async (
     });
   }
 };
+
+
+export const deleteFileFromS3Controller = async()=>{
+  
+}
