@@ -202,7 +202,7 @@ export const getPresignedUrlforFilesService = async (
   user_role: string,
 ): Promise<string> => {
   const checkProject = await pool.query(
-    `SELECT id FROM projects WHERE project_id = $1`,
+    `SELECT id FROM projects WHERE id = $1`,
     [project_id],
   );
 
@@ -263,6 +263,15 @@ export const deleteFileFromS3Service = async (
   }
 
   const client = await pool.connect();
+  const fileRecord = await pool.query(
+        `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
+        [file_id, project_id],
+      );
+      if (fileRecord.rows.length === 0) {
+        throw new Error("file not found");
+      }
+
+      const objectKey = fileRecord.rows[0].object_key;
 
   try {
     await client.query("BEGIN");
@@ -272,15 +281,6 @@ export const deleteFileFromS3Service = async (
     // DB DELETE IS SUCCESSFUL MOVING TO s3 delete
 
     try {
-      const fileRecord = await pool.query(
-        `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
-        [file_id, project_id],
-      );
-      if (fileRecord.rows.length === 0) {
-        throw new Error("file not found");
-      }
-
-      const objectKey = fileRecord.rows[0].object_key;
       await deleteFroms3Bucket({ objectKey });
     } catch (s3Error) {
       // s3 clean up queue as s3 deletions cant be rolled back so to avoid the files being orphaned we put them in the queue and later delete them needs full implementation
