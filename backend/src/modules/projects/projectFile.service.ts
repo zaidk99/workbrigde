@@ -270,8 +270,10 @@ file_id:string,
 
       const objectKey = fileRecord.rows[0].object_key;
       await deleteFroms3Bucket({objectKey});
-    } catch (error) {
-      
+    } catch (s3Error) {
+      // s3 clean up queue as s3 deletions cant be rolled back so to avoid the files being orphaned we put them in the queue and later delete them needs full implementation
+      // await pool.query(`INTERT INTO s3_cleanup_queue ......`)
+      throw new Error("unable to delete from file in storage");
     }
     
   } 
