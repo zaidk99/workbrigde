@@ -264,14 +264,14 @@ export const deleteFileFromS3Service = async (
 
   const client = await pool.connect();
   const fileRecord = await pool.query(
-        `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
-        [file_id, project_id],
-      );
-      if (fileRecord.rows.length === 0) {
-        throw new Error("file not found");
-      }
+    `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
+    [file_id, project_id],
+  );
+  if (fileRecord.rows.length === 0) {
+    throw new Error("file not found");
+  }
 
-      const objectKey = fileRecord.rows[0].object_key;
+  const objectKey = fileRecord.rows[0].object_key;
 
   try {
     await client.query("BEGIN");
