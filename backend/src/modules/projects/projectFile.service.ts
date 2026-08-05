@@ -1,6 +1,10 @@
 import { pool } from "../../config/db";
 import multer from "multer";
-import { deleteFroms3Bucket, uploadToS3Bucket, viewFromS3Bucket } from "./s3.service";
+import {
+  deleteFroms3Bucket,
+  uploadToS3Bucket,
+  viewFromS3Bucket,
+} from "./s3.service";
 
 interface uploadInput {
   project_id: string;
@@ -51,7 +55,7 @@ export const uploadProjectFileService = async ({
   if (checkProject.rows.length === 0) {
     throw new Error("project does not exist");
   }
- 
+
   if (role == "client") {
     const checkProjectOwner = await pool.query(
       `SELECT * FROM projects WHERE id = $1 AND client_user_id = $2;`,
@@ -197,7 +201,6 @@ export const getPresignedUrlforFilesService = async (
   user_id: string,
   user_role: string,
 ): Promise<string> => {
-
   const checkProject = await pool.query(
     `SELECT id FROM projects WHERE project_id = $1`,
     [project_id],
@@ -235,50 +238,59 @@ export const getPresignedUrlforFilesService = async (
     }
   }
 
-  const fileRecord = await pool.query(`SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,[file_id,project_id]);
-  if(fileRecord.rows.length === 0 ){throw new Error("file not found")};
+  const fileRecord = await pool.query(
+    `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
+    [file_id, project_id],
+  );
+  if (fileRecord.rows.length === 0) {
+    throw new Error("file not found");
+  }
 
   const objectKey = fileRecord.rows[0].object_key;
 
-  const viewFileUrl = await viewFromS3Bucket({objectKey});
+  const viewFileUrl = await viewFromS3Bucket({ objectKey });
   return viewFileUrl;
 };
 
-export const deleteFileFromS3Service = async(
-project_id:string,
-user_id:string,
-user_role:string,
-file_id:string,
-):Promise<void>=>{
-
-  if(user_role != 'admin'){
-     throw new Error("you are not authorized to delete");
+export const deleteFileFromS3Service = async (
+  project_id: string,
+  user_id: string,
+  user_role: string,
+  file_id: string,
+): Promise<void> => {
+  if (user_role != "admin") {
+    throw new Error("you are not authorized to delete");
   }
 
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
-    await client.query(`DELETE FROM project_files WHERE id = $1`,[file_id]);
-    await client.query('COMMIT');
+    await client.query(`DELETE FROM project_files WHERE id = $1`, [file_id]);
+    await client.query("COMMIT");
 
     // DB DELETE IS SUCCESSFUL MOVING TO s3 delete
 
     try {
-         const fileRecord = await pool.query(`SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,[file_id,project_id]);
-         if(fileRecord.rows.length === 0 ){throw new Error("file not found")};
+      const fileRecord = await pool.query(
+        `SELECT object_key FROM project_files WHERE id=$1 AND project_id = $2`,
+        [file_id, project_id],
+      );
+      if (fileRecord.rows.length === 0) {
+        throw new Error("file not found");
+      }
 
       const objectKey = fileRecord.rows[0].object_key;
-      await deleteFroms3Bucket({objectKey});
+      await deleteFroms3Bucket({ objectKey });
     } catch (s3Error) {
       // s3 clean up queue as s3 deletions cant be rolled back so to avoid the files being orphaned we put them in the queue and later delete them needs full implementation
       // await pool.query(`INTERT INTO s3_cleanup_queue ......`)
       throw new Error("unable to delete from file in storage");
     }
-    
-  } 
-
-
-
-
-}
+  } catch (dbError) {
+    await client.query("ROLLBACK");
+    throw dbError;
+  } finally {
+    client.release();
+  }
+};
