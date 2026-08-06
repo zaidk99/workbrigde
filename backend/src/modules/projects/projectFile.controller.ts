@@ -198,7 +198,7 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
 
  try {
    await deleteFileFromS3Service(project_id,user_role,file_id);
-   res.status(204).json({
+   res.status(200).json({
     success:true,
     message:"successfully deleted the file",
    });
@@ -210,7 +210,8 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
        })
        return;
     }
-    if(error.message === "unable to delete from file in storage" ){
+    
+    if(error.message === "file not found" ){
       res.status(404).json({
         success:false,
         message:error.message,
