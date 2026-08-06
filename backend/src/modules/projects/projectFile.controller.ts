@@ -210,7 +210,21 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
        })
        return;
     }
-    if(error.message === )
+    if(error.message === "unable to delete from file in storage" ){
+      res.status(404).json({
+        success:false,
+        message:error.message,
+      })
+      return;
+    }
+
+    res.status(500).json({
+      success:false,
+      message:error instanceof Error
+      ? error.message
+      : "unknown error",
+    })
+    return;
 
  }
 }
