@@ -180,3 +180,22 @@ export const getPresignedUrlforFilesController = async (
     return;
   }
 };
+
+export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
+ if(!req.user){
+  res.status(401).json({
+    success:false,
+    message:"unauthorized",
+  })
+  return;
+ }
+
+ const project_id = req.params.project_id as string;
+ const user_role = req.user.role;
+ const file_id = req.params.file_id as string;
+
+ try {
+  
+ } catch (error) {
+  
+ }

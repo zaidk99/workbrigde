@@ -355,9 +355,3 @@ export const projectStatusUpdateController = async (
   }
 };
 
-
-export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
-  
-
-
-}
