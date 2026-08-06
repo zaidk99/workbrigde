@@ -203,7 +203,14 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
     message:"successfully deleted the file",
    });
  } catch (error:any) {
-  
+    if(error.message === "you are not authorized to delete" ){
+       res.status(403).json({
+         success:false,
+         message:error.message,
+       })
+       return;
+    }
+    if(error.message === )
 
  }
 }
