@@ -73,10 +73,11 @@ CREATE TABLE IF NOT EXISTS project_employees(
 -- Message Table 
 CREATE TABLE IF NOT EXISTS messages(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE NO ACTION,
-    receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE NO ACTION,
+    sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    receiver_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
