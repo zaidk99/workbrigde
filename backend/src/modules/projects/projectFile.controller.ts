@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import {
+  deleteFileFromS3Service,
   getPresignedUrlforFilesService,
   getUploadedFilesService,
   uploadProjectFileService,
@@ -194,8 +195,15 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
  const user_role = req.user.role;
  const file_id = req.params.file_id as string;
 
+
  try {
-  
+   await deleteFileFromS3Service(project_id,user_role,file_id);
+   res.status(204).json({
+    success:true,
+    message:"successfully deleted the file",
+   });
  } catch (error) {
-  
+
  }
+}
+  
