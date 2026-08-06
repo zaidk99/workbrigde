@@ -202,7 +202,8 @@ export const deleteFileFromS3Controller = async(req:Request , res:Response)=>{
     success:true,
     message:"successfully deleted the file",
    });
- } catch (error) {
+ } catch (error:any) {
+  
 
  }
 }
