@@ -13,6 +13,7 @@ import {
   unassignEmployeestoProjectController,
 } from "./project.controller";
 import {
+  deleteFileFromS3Controller,
   getPresignedUrlforFilesController,
   getUploadedFilesController,
   uploadProjectFileController,
@@ -71,6 +72,13 @@ router.get(
   getPresignedUrlforFilesController,
 );
 
+router.delete(
+  "/:project_id/files/:file_id",
+  authenticate,
+  authorizeRoles('admin'),
+  deleteFileFromS3Controller,
+)
+
 // api to assign employees admin only
 router.post(
   "/:project_id/assigning-employees",
@@ -85,12 +93,14 @@ router.delete(
   authorizeRoles("admin"),
   unassignEmployeestoProjectController,
 );
+
 router.patch(
   "/:project_id/status",
   authenticate,
   authorizeRoles("employee", "admin"),
   projectStatusUpdateController,
 );
+
 router.post(
   "/:project_id/upload-project-files",
   authenticate,
@@ -98,6 +108,10 @@ router.post(
   upload.array("files", 10),
   uploadProjectFileController,
 );
+
+
+
+
 
 router.get(
   "/:project_id",
