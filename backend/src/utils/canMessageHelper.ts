@@ -41,6 +41,8 @@ export const canMessage = async (
 
     // check employee belongs to client's project
 
+    
+
 }
 
 if (sender_role === 'client' && receiver_role === 'employee') {
