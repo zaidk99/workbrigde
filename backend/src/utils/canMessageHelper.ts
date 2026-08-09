@@ -14,14 +14,14 @@ export const canMessage = async (
   console.log("receiver_role in helper function canMessage :", receiver_role);
 
   if (!receiver_role) {
-    throw new Error("reciever not found");
+    throw new Error("receiver not found");
   }
 
-  if (sender_role === "admin" || receiver_role === "admin") {
+  if (sender_role === 'admin' || receiver_role === 'admin') {
     return true;
   }
 
-  if (sender_role === "employee" && receiver_role === "employee") {
+  if (sender_role === 'employee' && receiver_role === 'employee') {
     const result = await pool.query(
       `
                                 SELECT EXISTS(SELECT 1 FROM project_employees 
@@ -33,8 +33,22 @@ export const canMessage = async (
       [sender_id, receiver_id],
     );
 
- 
-
     return result.rows[0].exists;
+    
   }
+ 
+ if (sender_role === 'employee' && receiver_role === 'client') {
+
+    // check employee belongs to client's project
+
+}
+
+if (sender_role === 'client' && receiver_role === 'employee') {
+
+}
+
+return false;
+
+
+
 };
