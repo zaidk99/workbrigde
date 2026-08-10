@@ -17,11 +17,11 @@ export const canMessage = async (
     throw new Error("receiver not found");
   }
 
-  if (sender_role === 'admin' || receiver_role === 'admin') {
+  if (sender_role === "admin" || receiver_role === "admin") {
     return true;
   }
 
-  if (sender_role === 'employee' && receiver_role === 'employee') {
+  if (sender_role === "employee" && receiver_role === "employee") {
     const result = await pool.query(
       `
                                 SELECT EXISTS(SELECT 1 FROM project_employees 
@@ -34,23 +34,35 @@ export const canMessage = async (
     );
 
     return result.rows[0].exists;
-    
   }
- 
- if (sender_role === 'employee' && receiver_role === 'client') {
 
+  if (sender_role === "employee" && receiver_role === "client") {
     // check employee belongs to client's project
+    const result = await pool.query(
+      `SELECT EXISTS (SELECT 1 
+         FROM projects p 
+         JOIN project_employees pe 
+         ON p.id = pe.project_id
+         WHERE pe.employee_id = $1
+         AND p.client_user_id = $2 
+         AND p.status = 'inprogress' )`,
+      [sender_id, receiver_id],
+    );
+    return result.rows[0].exists;
+  }
 
-    
+  if (sender_role === "client" && receiver_role === "employee") {
+      const result = await pool.query( `SELECT EXISTS (SELECT 1 FROM projects p 
+        JOIN project_employees pe 
+        ON p.id = pe.project_id 
+        WHERE 
+        pe.employee_id = $2 
+        AND
+        p.client_user_id = $1 
+        AND 
+        p.status = 'inprogress' )`,[sender_id,receiver_id]);
+        return result.rows[0].exists;
+  }
 
-}
-
-if (sender_role === 'client' && receiver_role === 'employee') {
-
-}
-
-return false;
-
-
-
+  return false;
 };
