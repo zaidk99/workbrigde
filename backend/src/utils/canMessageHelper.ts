@@ -20,6 +20,10 @@ export const canMessage = async (
   if (sender_role === "admin" || receiver_role === "admin") {
     return true;
   }
+  
+  if (sender_role === "client" && receiver_role === "client") {
+  return false;  // clients cannot message each other
+}
 
   if (sender_role === "employee" && receiver_role === "employee") {
     const result = await pool.query(
