@@ -113,3 +113,55 @@ export const getMessagesForSpecificUserId = async (
 
     return result.rows;
 };
+
+
+export const getMessageConversations = async (
+    currentUserId: string
+) => {
+    const conversationsQuery = `
+        SELECT DISTINCT ON (
+            CASE
+                WHEN m.sender_id = $1 THEN m.receiver_id
+                ELSE m.sender_id
+            END
+        )
+            CASE
+                WHEN m.sender_id = $1 THEN m.receiver_id
+                ELSE m.sender_id
+            END AS other_user_id,
+
+            u.name AS other_user_name,
+            u.email AS other_user_email,
+            u.role AS other_user_role,
+
+            m.id AS message_id,
+            m.content AS last_message,
+            m.created_at AS last_message_at
+
+        FROM messages m
+
+        JOIN users u
+            ON u.id = CASE
+                WHEN m.sender_id = $1 THEN m.receiver_id
+                ELSE m.sender_id
+            END
+
+        WHERE
+            m.sender_id = $1
+            OR m.receiver_id = $1
+
+        ORDER BY
+            CASE
+                WHEN m.sender_id = $1 THEN m.receiver_id
+                ELSE m.sender_id
+            END,
+            m.created_at DESC;
+    `;
+
+    const result = await pool.query(
+        conversationsQuery,
+        [currentUserId]
+    );
+
+    return result.rows;
+};

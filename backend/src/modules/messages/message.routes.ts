@@ -1,22 +1,19 @@
 import express from "express";
 import { authenticate } from "../../middleware/authenticate";
-import { getMessagesForSpecificUserIdController, sendMessage } from "./message.controller";
+import {
+  getMessagesForSpecificUserIdController,
+  sendMessage,
+} from "./message.controller";
 
 const router = express.Router();
 
-router.post(
-  "/",
-  authenticate,
-  sendMessage,
-);
+router.post("/", authenticate, sendMessage);
 router.get(
+  "/:userId",
 
-    "/:userId",
+  authenticate,
 
-    authenticate,
-
-    getMessagesForSpecificUserIdController
-
+  getMessagesForSpecificUserIdController,
 );
 
 export default router;
