@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticate } from "../../middleware/authenticate";
 import {
+    getMessageConversationsController,
   getMessagesForSpecificUserIdController,
   sendMessage,
 } from "./message.controller";
@@ -15,5 +16,15 @@ router.get(
 
   getMessagesForSpecificUserIdController,
 );
+router.get(
+
+    "/",
+
+    authenticate,
+
+    getMessageConversationsController
+
+);
+
 
 export default router;

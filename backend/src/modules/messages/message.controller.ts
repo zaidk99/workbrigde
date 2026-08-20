@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getMessagesForSpecificUserId, sendMessageToSpecificUserId } from "./message.service";
+import { getMessageConversations, getMessagesForSpecificUserId, sendMessageToSpecificUserId } from "./message.service";
 import  typeValidations  from "./message.validation";
 
 export const sendMessage = async (
@@ -134,3 +134,38 @@ export const getMessagesForSpecificUserIdController = async (
     }
 };
 
+export const getMessageConversationsController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const currentUserId = req.user.id;
+
+        const conversations = await getMessageConversations(
+            currentUserId
+        );
+
+        return res.status(200).json({
+            success: true,
+            conversations,
+        });
+
+    } catch (error) {
+        console.error(
+            "Get message conversations error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get conversations",
+        });
+    }
+};
