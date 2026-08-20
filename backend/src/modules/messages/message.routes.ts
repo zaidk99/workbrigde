@@ -1,13 +1,13 @@
-import { Router } from "express";
+import express from "express";
+import { authenticate } from "../../middleware/authenticate";
 import { sendMessage } from "./message.controller";
-import { authenticate } from "../../middlewares/authenticate";
 
-const router = Router();
+const router = express.Router();
 
 router.post(
-    "/",
-    authenticate,
-    sendMessage
+  "/",
+  authenticate,
+  sendMessage,
 );
 
 export default router;
