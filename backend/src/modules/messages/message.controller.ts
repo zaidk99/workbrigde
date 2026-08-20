@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getMessageConversations, getMessagesForSpecificUserId, sendMessageToSpecificUserId } from "./message.service";
+import { getMessageConversations, getMessagesForSpecificUserId, searchMessageableUsers, sendMessageToSpecificUserId } from "./message.service";
 import  typeValidations  from "./message.validation";
 
 export const sendMessage = async (
@@ -166,6 +166,64 @@ export const getMessageConversationsController = async (
         return res.status(500).json({
             success: false,
             message: "Failed to get conversations",
+        });
+    }
+};
+
+
+export const searchMessageableUsersController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const currentUserId = req.user.id;
+        const currentUserRole = req.user.role;
+
+        const searchTerm = req.query.q;
+
+        if (typeof searchTerm !== "string") {
+            return res.status(400).json({
+                success: false,
+                message: "Search query is required",
+            });
+        }
+
+        const trimmedSearchTerm = searchTerm.trim();
+
+        if (trimmedSearchTerm.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Search query cannot be empty",
+            });
+        }
+
+        const users = await searchMessageableUsers(
+            currentUserId,
+            currentUserRole,
+            trimmedSearchTerm
+        );
+
+        return res.status(200).json({
+            success: true,
+            users,
+        });
+
+    } catch (error) {
+        console.error(
+            "Search messageable users error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to search users",
         });
     }
 };

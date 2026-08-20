@@ -22,10 +22,12 @@ export const sendMessageToSpecificUserId = async (
     }
 
     const allowed = await canMessage(
-        senderId,
-        receiverId,
-        senderRole
-    );
+    senderId,
+    senderRole,
+    receiverId
+);
+
+
 
     if (!allowed) {
         throw new Error("Not authorized to send message to this user");
@@ -77,11 +79,11 @@ export const getMessagesForSpecificUserId = async (
     }
 
 
-    const allowed = await canMessage(
-        currentUserId,
-        otherUserId,
-        currentUserRole
-    );
+const allowed = await canMessage(
+    currentUserId,
+    currentUserRole,
+    otherUserId
+);
 
     if (!allowed) {
         throw new Error(
@@ -170,4 +172,47 @@ export const getMessageConversations = async (
     );
 
     return result.rows;
+};
+
+
+export const searchMessageableUsers = async (
+    currentUserId: string,
+    currentUserRole: string,
+    searchTerm: string,
+) => {
+    const usersResult = await pool.query(
+        `
+        SELECT
+            id,
+            name,
+            email,
+            role
+        FROM users
+        WHERE
+            id != $1
+            AND (
+                name ILIKE $2
+                OR email ILIKE $2
+            )
+        ORDER BY name ASC
+        LIMIT 20;
+        `,
+        [currentUserId, `%${searchTerm}%`]
+    );
+
+    const messageableUsers = [];
+
+    for (const user of usersResult.rows) {
+        const allowed = await canMessage(
+            currentUserId,
+            currentUserRole,
+            user.id
+        );
+
+        if (allowed) {
+            messageableUsers.push(user);
+        }
+    }
+
+    return messageableUsers;
 };
