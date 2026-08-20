@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { sendMessageToSpecificUserId } from "./message.service";
-import { typeValidations } from "./message.validation";
+import  typeValidations  from "./message.validation";
 
 export const sendMessage = async (
     req: Request,
@@ -62,6 +62,89 @@ export const sendMessage = async (
         return res.status(500).json({
             success: false,
             message: "Failed to send message"
+        });
+    }
+};
+
+
+export const getMessagesForSpecificUserIdController = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+
+        const currentUserId = req.user.id;
+        const currentUserRole = req.user.role;
+
+
+        const { userId: otherUserId } = req.params;
+
+
+        const messages = await getMessagesForSpecificUserId(
+            currentUserId,
+            otherUserId,
+            currentUserRole
+        );
+
+
+        return res.status(200).json({
+            success: true,
+            messages,
+        });
+
+    } catch (error) {
+
+
+        if (error instanceof ZodError) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid request data",
+                errors: error.issues,
+            });
+        }
+
+        if (error instanceof Error) {
+
+            if (error.message === "User does not exist") {
+                return res.status(404).json({
+                    success: false,
+                    message: error.message,
+                });
+            }
+
+            if (
+                error.message ===
+                "Cannot get conversation with yourself"
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: error.message,
+                });
+            }
+
+            if (
+                error.message ===
+                "Not authorized to view conversation with this user"
+            ) {
+                return res.status(403).json({
+                    success: false,
+                    message: error.message,
+                });
+            }
+        }
+
+        // Unexpected error
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get conversation",
         });
     }
 };

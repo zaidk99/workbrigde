@@ -62,4 +62,54 @@ export const getMessagesForSpecificUserId = async (
     currentUserRole: string,
 ) => {
 
+    const otherUser = await pool.query(
+        `SELECT id, role FROM users WHERE id = $1`,
+        [otherUserId]
+    );
+
+    if (otherUser.rows.length === 0) {
+        throw new Error("User does not exist");
+    }
+
+
+    if (currentUserId === otherUserId) {
+        throw new Error("Cannot get conversation with yourself");
+    }
+
+
+    const allowed = await canMessage(
+        currentUserId,
+        otherUserId,
+        currentUserRole
+    );
+
+    if (!allowed) {
+        throw new Error(
+            "Not authorized to view conversation with this user"
+        );
+    }
+
+
+    const messagesQuery = `
+        SELECT
+            id,
+            sender_id,
+            receiver_id,
+            content,
+            created_at,
+            updated_at
+        FROM messages
+        WHERE
+            (sender_id = $1 AND receiver_id = $2)
+            OR
+            (sender_id = $2 AND receiver_id = $1)
+        ORDER BY created_at ASC;
+    `;
+
+    const result = await pool.query(messagesQuery, [
+        currentUserId,
+        otherUserId
+    ]);
+
+    return result.rows;
 };
