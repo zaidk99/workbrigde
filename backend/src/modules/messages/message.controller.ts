@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { sendMessageToSpecificUserId } from "./message.service";
+import { getMessagesForSpecificUserId, sendMessageToSpecificUserId } from "./message.service";
 import  typeValidations  from "./message.validation";
 
 export const sendMessage = async (
@@ -68,11 +68,10 @@ export const sendMessage = async (
 
 
 export const getMessagesForSpecificUserIdController = async (
-    req: Request,
+    req: Request<{ userId: string }>,
     res: Response
 ) => {
     try {
-
         if (!req.user) {
             return res.status(401).json({
                 success: false,
@@ -80,13 +79,10 @@ export const getMessagesForSpecificUserIdController = async (
             });
         }
 
-
         const currentUserId = req.user.id;
         const currentUserRole = req.user.role;
 
-
         const { userId: otherUserId } = req.params;
-
 
         const messages = await getMessagesForSpecificUserId(
             currentUserId,
@@ -94,22 +90,12 @@ export const getMessagesForSpecificUserIdController = async (
             currentUserRole
         );
 
-
         return res.status(200).json({
             success: true,
             messages,
         });
 
     } catch (error) {
-
-
-        if (error instanceof ZodError) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid request data",
-                errors: error.issues,
-            });
-        }
 
         if (error instanceof Error) {
 
@@ -141,10 +127,10 @@ export const getMessagesForSpecificUserIdController = async (
             }
         }
 
-        // Unexpected error
         return res.status(500).json({
             success: false,
             message: "Failed to get conversation",
         });
     }
 };
+
