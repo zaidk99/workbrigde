@@ -3,7 +3,8 @@ import cors from  "cors";
 import authRouter from "./modules/auth/auth.routes";
 import userRouter from "./modules/user/user.routes";
 import serviceRequestsrouter from "./modules/serviceRequests/serviceRequest.routes";
-import projectsRouter from "./modules/projects/project.routes"
+import projectsRouter from "./modules/projects/project.routes";
+import messageRoutes from "./modules/messages/message.routes";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use('/api/user',userRouter);
 
 app.use('/api/serviceRequests',serviceRequestsrouter);
 app.use('/api/projects',projectsRouter);
+app.use("/api/messages", messageRoutes);
 
 
 app.get("/health",(_req,res)=>{

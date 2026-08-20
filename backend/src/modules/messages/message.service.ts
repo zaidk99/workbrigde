@@ -56,7 +56,10 @@ export const sendMessageToSpecificUserId = async (
     return result.rows[0];
 };
 
+export const getMessagesForSpecificUserId = async (
+    currentUserId: string,
+    otherUserId: string,
+    currentUserRole: string,
+) => {
 
-export const getMessagesForSpecificUserId = async()=>{
-
-}
+};
