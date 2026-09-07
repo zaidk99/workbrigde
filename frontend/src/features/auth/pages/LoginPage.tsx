@@ -13,9 +13,8 @@ const LoginPage = () => {
           <div className="">
              <p className="font-light text-xs">Hi, Welcome back 👋 </p>
           </div>
-          
-             <hr className="bg-gray-600 "/>
-        
+             <hr className="bg-gray-600 w-24"/>
+           
         </div>
         <div className="sm:hidden">
         </div>
