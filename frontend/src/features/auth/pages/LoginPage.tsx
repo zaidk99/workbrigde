@@ -22,12 +22,12 @@ const LoginPage = () => {
         <hr className="w-24 bg-gray-600" />
         <form className="flex w-full max-w-88 flex-col gap-4 sm:gap-6">
           <div className="flex flex-col gap-2">
-            <label htmlFor="username" className="text-lg font-semibold">
-              User name
+            <label htmlFor="email" className="text-lg font-semibold">
+              Email
             </label>
             <input
-              type="text"
-              id="username"
+              type="email"
+              id="email"
               placeholder="Enter your username"
               className="h-10 w-full rounded-lg border-2 border-gray-300 p-1.5"
             />
@@ -48,7 +48,7 @@ const LoginPage = () => {
                 onClick={handlePassword}
                 className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition hover:text-gray-700"
               >
-                {showPassword ?<LuEye /> : <LuEyeOff /> }
+                {showPassword ? <LuEye /> : <LuEyeOff /> }
               </button>
             </div>
           </div>
