@@ -1,12 +1,34 @@
 import React, { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { login } from "../api";
 
 const LoginPage = () => {
+
  const [showPassword , setShowPassword] = useState(false);
  function handlePassword(){
     setShowPassword((prev) => (!prev));
  };
+
+ const [email , setEmail] = useState("");
+ const [password , setPassword] = useState("");
+
+ async function handleSubmit(e:React.SubmitEvent<HTMLFormElement>){
+    e.preventDefault();
+    try {
+      const res = await login({email , password});
+      
+    } catch (error) {
+      
+    }
+    
+
+    
+ }
+
+
  
+ 
+
   return (
     <div className="grid min-h-screen w-full grid-cols-1 pt-16 sm:pt-24 font-family-[inter]">
       <div className="flex w-full flex-col items-center gap-4 px-4 sm:gap-6">
@@ -20,7 +42,10 @@ const LoginPage = () => {
           <p className="text-xs font-light">Hi, Welcome back 👋 </p>
         </div>
         <hr className="w-24 bg-gray-600" />
-        <form className="flex w-full max-w-88 flex-col gap-4 sm:gap-6">
+        <form 
+        onSubmit={handleSubmit}
+        className="flex w-full max-w-88 flex-col gap-4 sm:gap-6"
+        >
           <div className="flex flex-col gap-2">
             <label htmlFor="email" className="text-lg font-semibold">
               Email
@@ -28,6 +53,8 @@ const LoginPage = () => {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
               placeholder="Enter your username"
               className="h-10 w-full rounded-lg border-2 border-gray-300 p-1.5"
             />
@@ -40,6 +67,8 @@ const LoginPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
                 placeholder="Enter your password"
                 className="h-10 w-full rounded-lg border-2 border-gray-300 p-1.5 pr-10"
               />
@@ -53,9 +82,11 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <button className="h-10 w-full rounded-lg bg-[#474BCA] text-xl font-medium text-white hover:bg-blue-600">
+            <button 
+             type="submit"
+            className="h-10 w-full rounded-lg bg-[#474BCA] text-xl font-medium text-white hover:bg-blue-600">
               Login
-            </button>
+           </button>
           </div>
         </form>
       </div>

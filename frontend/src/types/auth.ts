@@ -15,3 +15,12 @@ export interface LoginResponse{
         user: AuthUser;
 }
 
+
+export interface AuthContextType {
+    user: AuthUser | null;
+    token: string| null;
+    isAuthenticated: boolean;
+    loginAuth: (data:LoginResponse) => void;
+    logut: ()=> void;
+}
+
