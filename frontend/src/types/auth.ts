@@ -21,6 +21,8 @@ export interface AuthContextType {
     token: string| null;
     isAuthenticated: boolean;
     loginAuth: (data:LoginResponse) => void;
-    logut: ()=> void;
+    logout: ()=> void;
 }
+
+
 
