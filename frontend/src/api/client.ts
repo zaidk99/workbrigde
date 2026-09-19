@@ -11,15 +11,6 @@ export class AppError extends Error {
     }
 }   
 
-export async function apiRequest<T>(
-    method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
-    path: string,
-    body?: unknown
-) Promise<T> {
-    
-}
-
-
 
 
 
